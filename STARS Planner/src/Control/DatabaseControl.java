@@ -16,13 +16,13 @@ import java.util.ArrayList;
 public class DatabaseControl
 {
 	public static List readSerializedObject(String filename) {
-		List pDetails = null;
+		List objectList = null;
 		FileInputStream fis = null;
 		ObjectInputStream in = null;
 		try {
 			fis = new FileInputStream(filename);
 			in = new ObjectInputStream(fis);
-			pDetails = (ArrayList) in.readObject();
+			objectList = (ArrayList) in.readObject();
 			in.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -31,7 +31,7 @@ public class DatabaseControl
 		}
 		// print out the size
 		//System.out.println(" Details Size: " + pDetails.size());
-		return pDetails;
+		return objectList;
 	}
 
 	public static void writeSerializedObject(String filename, List list) {

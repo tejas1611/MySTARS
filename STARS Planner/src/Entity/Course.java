@@ -25,12 +25,12 @@ public class Course implements Serializable {
 	}
 	
 	public Course(Course another) {
-		this.au = another.getAu();
-		this.courseCode = another.getCourseCode();
-		this.courseName = another.getCourseName();
+		this.au = another.au;
+		this.courseCode = another.courseCode;
+		this.courseName = another.courseName;
 		this.courseType = another.courseType;
-		this.indexes = another.getIndexes();
-		this.school = another.getSchool();
+		this.indexes = another.indexes;
+		this.school = another.school;
 	}
 	
 	public String printName() { return (courseCode + ": " + courseName); }

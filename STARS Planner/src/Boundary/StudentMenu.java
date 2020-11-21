@@ -40,6 +40,10 @@ public class StudentMenu {
 		                System.out.print("Enter Course Code: ");
 		                String courseID = sc.nextLine();
 		                Course course = CourseControl.findCourse(courseID);
+		                if(course==null) {
+		                	System.out.println("Course code not found");
+		                	break;
+		                }
 		                ArrayList<IndexNumber> indexNum =course.getIndexes();
 		                System.out.print("Following index groups were found: ");
 		                for (IndexNumber num : indexNum) { 		      
@@ -127,7 +131,7 @@ public class StudentMenu {
                     		while(tries>0) {
 	                            System.out.print("Enter password of peer: ");
 	                            pass=LoginMenu.enterPassword();
-	                            if(PasswordControl.getHash(pass)==((Student)list.get(i)).getPassw().getPassword()) {
+	                            if(PasswordControl.comparePassword(pass, ((Student)list.get(i)).getPassw())) {
 	                            	//password correct
                                     peer = (Student) list.get(i);
 	                            	System.out.println("Login Successful!");

@@ -8,7 +8,7 @@ import Entity.IndexNumber;
 import Entity.Student;
 
 public class CourseControl {
-
+//
 	public static Course findCourse(String courseCode) {
 		Course course = null;
 		
@@ -25,6 +25,7 @@ public class CourseControl {
 		
 		return course;
 	}	
+	
     public static int getVacancy(String courseCode, int indexNumber) {
     	Course course;
 		try {

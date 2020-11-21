@@ -1,17 +1,24 @@
 package Entity;
 
-public class Password {
-    private String password;
+import java.io.Serializable;
+
+public class Password implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
+	private String hashedPassword;
+	private byte[] salt;
+    
 	public Password() {
-		this.password = " ";
+		this.hashedPassword = " ";
 	}
-	public String getPassword()
-	{
-		return password;
+	public Password(String pass, byte[] salt) {
+		this.hashedPassword = pass;
+		this.salt=salt;
 	}
-	public void setPassword(String password)
-	{
-		this.password = password;
-	}
+	
+	public String getPassword() { return hashedPassword; }
+	
+	public byte[] getSalt() { return salt; }
 
 }

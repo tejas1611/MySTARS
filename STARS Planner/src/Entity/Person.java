@@ -24,7 +24,7 @@ public abstract class Person implements Serializable {
 	public String getId() { return id; }
 	public void setId(String id) { this.id = id; }
 
-	public Password getPassw(){return password;}
+	public Password getPassw() { return password; }
 	
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }

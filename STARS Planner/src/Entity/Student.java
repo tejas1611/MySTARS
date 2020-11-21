@@ -11,14 +11,26 @@ public class Student extends Person {
 	private static Calendar accessEnd = new GregorianCalendar(2020, 11, 30, 23, 59);
 	
 	private int matricNo;
-	private School school;
+	private int AULimit;
+	private String school;
 	private int yearOfStudy;
 	private HashMap<Course, IndexNumber> courses;
 	private HashMap<Course, IndexNumber> waitlist;
 	private boolean overloadPermission;
 	
+	private void setDefaultAULimit() {
+		if(school.equals("SCSE"))
+			AULimit = 22;
+		else if(school.equals("NBS"))
+			AULimit = 19;
+		else if(school.equals("SPMS"))
+			AULimit = 21;
+		else
+			AULimit = 22;
+	}
+	
 	public Student(String id, String name, String email, Password password, String gender, String nationality,
-			int matricNo, School school, String program, int yearOfStudy) {
+			int matricNo, String school, String program, int yearOfStudy) {
 		
 		super(id, name, email, password, gender, nationality);
 		this.matricNo = matricNo;
@@ -27,6 +39,7 @@ public class Student extends Person {
 		this.courses = new HashMap<Course, IndexNumber>();
 		this.waitlist = new HashMap<Course, IndexNumber>();
 		this.overloadPermission = false;
+		setDefaultAULimit();
 	}
 	
 	public String getNationality() { return nationality; }
@@ -53,6 +66,8 @@ public class Student extends Person {
 		return totalAU;
 	}
 	
+	public int getAULimit() { return AULimit; }
+
 	public int getNumberWaitlist() { return this.waitlist.size(); }
 	
 	public HashMap<Course, IndexNumber> getCourses() { return courses; }
@@ -77,6 +92,6 @@ public class Student extends Person {
 	public static Calendar getAccessEnd() {	return accessEnd; }
 	public static void setAccessEnd(Calendar accessEnd) { Student.accessEnd = accessEnd; }
 
-	public School getSchool() { return school; }
+	public String getSchool() { return school; }
 	
 }

@@ -18,7 +18,7 @@ public class StudentCourseControl {
     	}
     	// Check AU limit for student
     	int totalAU = student.getTotalAU();
-		if(totalAU+course.getAu() > student.getSchool().getAULimit() && !student.isOverloadPermission()) {
+		if(totalAU+course.getAu() > student.getAULimit() && !student.isOverloadPermission()) {
 			throw new Exception("Student not allowed to overload.");
 		}
 		

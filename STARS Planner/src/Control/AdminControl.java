@@ -7,15 +7,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class AdminControl {
-    
-	public void editStudentAccessPeriod(int startYear, int startMonth, int startDay, int startHours, int startMin,
+	public static void editStudentAccessPeriod(int startYear, int startMonth, int startDay, int startHours, int startMin,
 												int endYear, int endMonth, int endDay, int endHours, int endMin) {
 	   	Student.setAccessStart(new GregorianCalendar(startYear, startMonth, startDay, startHours, startMonth));
 	   	Student.setAccessEnd(new GregorianCalendar(endYear, endMonth, endDay, endHours, endMonth));
 	}
 	
-    public void addStudent(String id, String studentName, String email, Password password, String gender, String nationality,
-			int matricNo, School school, String program, int yearOfStudy) {
+    public static void addStudent(String id, String studentName, String email, Password password, String gender, String nationality,
+			int matricNo, String school, String program, int yearOfStudy) {
         Student newStudent = new Student(id, studentName, email, password, gender, nationality, matricNo, school, program, yearOfStudy);
         
         // Read student from database		
@@ -39,7 +38,7 @@ public class AdminControl {
     }
     
     @SuppressWarnings("unchecked")
-    public void addCourse(String courseCode, String courseName, String school, String courseType, int au) {
+    public static void addCourse(String courseCode, String courseName, String school, String courseType, int au) {
     	Course newCourse = new Course(courseCode, courseName, school, courseType, au);
     	
     	// Read from file
@@ -60,7 +59,7 @@ public class AdminControl {
     	}
     }
        
-    public boolean checkCourseIndex(String courseCode, int indexNumber) {
+    public static boolean checkCourseIndex(String courseCode, int indexNumber) {
     	Course course = CourseControl.findCourse(courseCode);
 		if (course == null) {
 			System.out.println("Error: Course not found");
@@ -75,7 +74,7 @@ public class AdminControl {
     }
     
     @SuppressWarnings("unchecked")
-	public void updateCourseVacancy(String courseCode, int indexNumber, int vacancy) throws Exception {
+	public static void updateCourseVacancy(String courseCode, int indexNumber, int vacancy) {
     	// TODO update course vacancy
         int waitlistLength=0;
 		int availableSpots=0;
@@ -105,7 +104,11 @@ public class AdminControl {
 						System.out.println("No students on waitlist.");
 					}
 					student.removeWaitlist(newCourse);
-					i.addStudent(student);
+					try {
+						i.addStudent(student);
+					} catch (Exception e) {
+						System.out.print("Error Encountered");
+					}
 					availableSpots-=1;
 					waitlistLength-=1;
 				}
@@ -138,7 +141,7 @@ public class AdminControl {
     }
     
     @SuppressWarnings("unchecked")
-	public void updateCourseIndex(String courseCode, int indexNumber, int newIndex) {
+	public static void updateCourseIndex(String courseCode, int indexNumber, int newIndex) {
         Course oldCourse = CourseControl.findCourse(courseCode);
 		if (oldCourse == null) {
 			System.out.println("Error: Course not found");
@@ -192,7 +195,7 @@ public class AdminControl {
     }
 
     @SuppressWarnings("unchecked")
-	public void updateCourseCode(String courseCode, String newCourseCode) {
+	public static void updateCourseCode(String courseCode, String newCourseCode) {
         Course oldCourse = CourseControl.findCourse(courseCode);
 		if (oldCourse == null) {
 			System.out.println("Error: Course not found");
@@ -229,7 +232,7 @@ public class AdminControl {
     }
 
     @SuppressWarnings("unchecked")
-	public void updateSchool(String courseCode, String setSchool) {
+	public static void updateSchool(String courseCode, String setSchool) {
         Course oldCourse = CourseControl.findCourse(courseCode);
 		if (oldCourse == null) {
 			System.out.println("Error: Course not found");
@@ -295,7 +298,7 @@ public class AdminControl {
     }
 
     
-    public void printStudentListByIndexNumber(String courseCode, int IndexNumber)
+    public static void printStudentListByIndexNumber(String courseCode, int IndexNumber)
      {
     	Course course = CourseControl.findCourse(courseCode);
 		if (course == null) {
@@ -329,7 +332,7 @@ public class AdminControl {
         System.out.println("Number of students in this index group: " + students.size());
     }
     
-    public void printStudentListByCourse(String courseCode)
+    public static void printStudentListByCourse(String courseCode)
     {
     	Course course = CourseControl.findCourse(courseCode);
 		if (course == null) {
@@ -360,7 +363,7 @@ public class AdminControl {
     }
     
     @SuppressWarnings("unchecked")
-	public void grantPermissionForOverloading(String studentName, int matricNumber) {
+	public static void grantPermissionForOverloading(String studentName, int matricNumber) {
     	List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
     	for(int index=0; index<studentDB.size(); index++) {
     		Student s = studentDB.get(index);
