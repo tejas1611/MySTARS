@@ -60,6 +60,11 @@ public class StudentCourseControl {
 				System.out.println("No vacancy available. Course waitlist limit (5) reached.");
 			}
 		}
+		try {
+			NotifyStudent.notifyEmail(student,course,0);
+		} catch (Exception e) {
+			System.out.print("Unable to send an E-mail.");
+		}
 		return;
     }
 
@@ -76,6 +81,11 @@ public class StudentCourseControl {
 			student.removeCourse(course);
 			Student studentToReg = index.findNextInWaitlist();
 			addCourse(studentToReg, courseID, index.getIndexNum());
+		}
+		try {
+			NotifyStudent.notifyEmail(student,course,2);
+		} catch (Exception e) {
+			System.out.print("Unable to send an E-mail.");
 		}
     }
     

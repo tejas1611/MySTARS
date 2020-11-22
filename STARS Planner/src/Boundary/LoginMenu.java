@@ -1,17 +1,8 @@
 package Boundary;
 
 import java.util.Scanner;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.Console;
-import java.io.FileInputStream;
-
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeUnit;
 import java.util.List;
-import java.util.ArrayList;
-
 import Control.*;
 import Entity.*;
 
@@ -48,8 +39,11 @@ public class LoginMenu {
 	                pass = enterPassword();
 	                if(PasswordControl.comparePassword(pass, ((Person)list.get(i)).getPassw())) {
                         // Password correct
-                        userNAME=username;
-                        System.out.println("Login Successful!");
+                        userNAME = username;
+                        System.out.println("\n~~~~ Login Successful! ~~~~");
+                        try {
+							TimeUnit.SECONDS.sleep(2);
+						} catch (InterruptedException e) { }
                         return 1;
                     }
                     else {
@@ -72,10 +66,16 @@ public class LoginMenu {
     
     public static String enterPassword(){
 		java.io.Console c = System.console();
-		char[] passString;
-		passString = c.readPassword();
-		String password = new String(passString);
-		return password;
+		if(c!=null) {
+			char[] passString;
+			passString = c.readPassword();
+			String password = new String(passString);
+			return password;
+		} 
+		else {
+			String password = new Scanner(System.in).nextLine();
+			return password;
+		}
 	}
 
     @SuppressWarnings("unchecked")

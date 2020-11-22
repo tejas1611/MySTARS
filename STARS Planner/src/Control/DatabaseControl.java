@@ -29,8 +29,7 @@ public class DatabaseControl
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
 		}
-		// print out the size
-		//System.out.println(" Details Size: " + pDetails.size());
+		
 		return objectList;
 	}
 
@@ -42,7 +41,6 @@ public class DatabaseControl
 			out = new ObjectOutputStream(fos);
 			out.writeObject(list);
 			out.close();
-		//	System.out.println("Object Persisted");
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}

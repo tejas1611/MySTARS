@@ -1,16 +1,22 @@
 package Control;
 
-import java.util.ArrayList;
 import Entity.*;
 import java.util.List;
-import java.util.Date;
+import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
+
+@SuppressWarnings("resource")
 public class AdminControl {
 	public static void editStudentAccessPeriod(int startYear, int startMonth, int startDay, int startHours, int startMin,
 												int endYear, int endMonth, int endDay, int endHours, int endMin) {
-	   	Student.setAccessStart(new GregorianCalendar(startYear, startMonth, startDay, startHours, startMonth));
-	   	Student.setAccessEnd(new GregorianCalendar(endYear, endMonth, endDay, endHours, endMonth));
+	   	Student.setAccessStart(new GregorianCalendar(startYear, startMonth-1, startDay, startHours, startMin));
+	   	Student.setAccessEnd(new GregorianCalendar(endYear, endMonth-1, endDay, endHours, endMin));
+	   	
+	   	System.out.println("Access Time have been changed to: " + Student.printaccessStart() + " to " + Student.printaccessEnd());
+	   	System.out.print("\n\nPress enter to continue....");
+    	new Scanner(System.in).nextLine();
 	}
 	
     public static void addStudent(String id, String studentName, String email, Password password, String gender, String nationality,
@@ -29,12 +35,17 @@ public class AdminControl {
     		}
     	}
 		
-		// Write to file and print all courses
+		// Write to file and print all students
+		System.out.println("\nStudents currently in database:");
 		studentDB.add(newStudent);
     	DatabaseControl.writeSerializedObject("studentDB", studentDB);
     	for(Student s : studentDB) {
     		s.printInfo();
     	}
+    	System.out.print("Total: " + studentDB.size());
+    	
+    	System.out.print("\n\nPress enter to continue....");
+    	new Scanner(System.in).nextLine();
     }
     
     @SuppressWarnings("unchecked")
@@ -57,6 +68,10 @@ public class AdminControl {
     	for(Course c : courseDB) {
     		c.printInfo();
     	}
+    	System.out.print("Total: " + courseDB.size());
+    	
+    	System.out.print("\n\nPress enter to continue....");
+    	new Scanner(System.in).nextLine();
     }
        
     public static boolean checkCourseIndex(String courseCode, int indexNumber) {
@@ -104,6 +119,11 @@ public class AdminControl {
 						System.out.println("No students on waitlist.");
 					}
 					student.removeWaitlist(newCourse);
+					try {
+						NotifyStudent.notifyEmail(student,newCourse,1);
+					} catch (Exception e) {
+						System.out.print("Unable to send an E-mail.");
+					}
 					try {
 						i.addStudent(student);
 					} catch (Exception e) {
@@ -339,10 +359,10 @@ public class AdminControl {
 			System.out.println("Error: Course not found");
 			return;
 		}
-    	ArrayList<Student> students = new ArrayList<Student>();
+    	ArrayList<Student> students = null;
     	students = CourseControl.getStudents(course);
     	
-    	if(students.size()<=0) {
+    	if(students==null) {
     		System.out.println("There are no students in this course!");
     		return;
     	}

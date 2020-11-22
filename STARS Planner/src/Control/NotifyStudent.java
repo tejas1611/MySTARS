@@ -1,9 +1,10 @@
 package Control;
 import Entity.Student;
+import Entity.Course;
 
 public class NotifyStudent {
 	
-    private String email;
+    private static String email;
     
     public NotifyStudent() {
 		 email = " ";
@@ -13,9 +14,9 @@ public class NotifyStudent {
 		 email = student.getEmail();
      }
      
-     public void notifyEmail(Student student) throws Exception {
+     public static void notifyEmail(Student student, Course course, int flag) throws Exception {
 		try {
-			SendMailTLS.sendMail(email, student);
+			SendMailTLS.sendMail(email, student, course, flag);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

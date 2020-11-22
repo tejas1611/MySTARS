@@ -8,7 +8,7 @@ import Entity.IndexNumber;
 import Entity.Student;
 
 public class CourseControl {
-//
+
 	public static Course findCourse(String courseCode) {
 		Course course = null;
 		
@@ -18,7 +18,7 @@ public class CourseControl {
 		
 		// Compare course code
 		for(Course c : courseDB) {
-    		if(c.getCourseCode() == courseCode) {
+    		if(c.getCourseCode().equals(courseCode)) {
     			course = c;
     		}
     	}

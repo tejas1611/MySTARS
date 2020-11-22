@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import Control.CourseControl;
 import Control.StudentCourseControl;
 import Control.PasswordControl;
@@ -19,8 +17,16 @@ public class StudentMenu {
         Calendar endDate = Student.getAccessEnd();
 		int studentChoice=0;
 		while(studentChoice != 7) {
+			StarsPlanner.clearScreen();
 			Calendar currentDate = Calendar.getInstance();
-			System.out.println("***** STUDENT PANEL *****");
+			if (currentDate.before(startDate) || endDate.before(currentDate)){
+				System.out.println("Student is not allowed to access menu outside access period");
+				System.out.println("Access period: " + Student.printaccessStart() + " to " + Student.printaccessEnd());
+				System.out.println("Current date and time: " + currentDate.getTime().toString());
+				break;
+			}
+			
+			System.out.println("\n\n\n***** STUDENT PANEL *****");
 			System.out.println("(1): Add Course");
 			System.out.println("(2): Drop Course");
 			System.out.println("(3): Check/Print Courses Registered ");
@@ -31,12 +37,9 @@ public class StudentMenu {
 			System.out.print("Select an action: ");
 			Scanner sc = new Scanner(System.in);
 			studentChoice = sc.nextInt();
+			sc.nextLine(); // Consume newline character
 			switch(studentChoice) {
 		     	case 1:
-	                if (currentDate.before(startDate)==true || currentDate.before(endDate) == false ){
-	                    System.out.println("Adding of course is not available.");
-	                }
-	                else {
 		                System.out.print("Enter Course Code: ");
 		                String courseID = sc.nextLine();
 		                Course course = CourseControl.findCourse(courseID);
@@ -50,20 +53,16 @@ public class StudentMenu {
 		                    System.out.print(num.getIndexNum() + " "); 		
 		                }
 		                System.out.print("\nEnter your required index number ");
-		                int index = sc.nextInt();                  
+		                int index = sc.nextInt();   
+		                sc.nextLine(); // Consume newline character
 		                try {
 		                	StudentCourseControl.addCourse(student, courseID, index);
 		                } catch (Exception e) {
 		                	System.out.print("Error encountered");
 						}
-	                }
 	                break;   
 	                
 	            case 2:
-	                if (currentDate.before(startDate)==true || currentDate.before(endDate) == false ) {
-	                        System.out.println("Dropping of course is not available.");
-	                }
-	                else { 
 		            	System.out.println("Enter Course Code");
 		                String courseID2 = sc.nextLine();    
 		                try {
@@ -71,7 +70,6 @@ public class StudentMenu {
 						} catch (Exception e) {
 							System.out.print("Error Encountered");
 						}
-	                }
 	                break;
 	                
 	            case 3: 
@@ -90,14 +88,11 @@ public class StudentMenu {
 	                }
 	                System.out.println("Enter your required index number to check for vacancy:");
 	                indexnumber=sc.nextInt(); 
+	                sc.nextLine(); // Consume newline character
 	                CourseControl.getVacancy(courseCode3, indexnumber);          
 	                break;
 	                
 	            case 5:
-	                if (currentDate.before(startDate)==true || currentDate.before(endDate) == false ){
-	                        System.out.println("Changing of index is not available.");
-	                }
-	                else {
 	            	System.out.println("Enter Course Code: ");
 	                String courseCode4 = sc.nextLine();
 	                Course course4=CourseControl.findCourse(courseCode4);
@@ -108,64 +103,60 @@ public class StudentMenu {
 	                }
 	                System.out.println("Enter index number to swap: ");
 	                int index2 = sc.nextInt();
+	                sc.nextLine(); // Consume newline character
 	                StudentCourseControl.changeIndexNumberOfCourse(student, courseCode4, index2);
-	                }
 	                break;
 	                
 	            case 6:
-                        if (currentDate.before(startDate)==true || currentDate.before(endDate) == false ){
-	                        System.out.println("Swapping of index is not available.");
-	                }
-                        else{ 
-	            	@SuppressWarnings("unchecked") 
-	            	List<Student> list = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
-	            	String username="";
-	            	String pass="";
-	            	int tries=3;
-                    System.out.print("Enter user name of peer: ");
-                    Student peer = null;
-                    username = sc.next();
-                    for(int i = 0 ; i < list.size() ; i++) {
-                    	if(username.equals(((Student)list.get(i)).getId())) {
-                    		tries=3;
-                    		while(tries>0) {
-	                            System.out.print("Enter password of peer: ");
-	                            pass=LoginMenu.enterPassword();
-	                            if(PasswordControl.comparePassword(pass, ((Student)list.get(i)).getPassw())) {
+                	@SuppressWarnings("unchecked") 
+                	List<Student> list = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
+                	String username="";
+                	String pass="";
+                	int tries=3;
+                	System.out.print("Enter user name of peer: ");
+                	Student peer = null;
+                	username = sc.nextLine();
+                	for(int i = 0 ; i < list.size() ; i++) {
+                		if(username.equals(((Student)list.get(i)).getId())) {
+                			tries=3;
+                			while(tries>0) {
+                				System.out.print("Enter password of peer: ");
+                				pass=LoginMenu.enterPassword();
+                				if(PasswordControl.comparePassword(pass, ((Student)list.get(i)).getPassw())) {
 	                            	//password correct
                                     peer = (Student) list.get(i);
 	                            	System.out.println("Login Successful!");
-	                            }
-	                            else {
+                				}
+                				else {
 	                            	System.out.println("Incorrect Password. Kindly re-enter!");
 	                            	tries-=1;
 	                            	System.out.println("Tries left- "+tries);
 	                            	if(tries==0) {
 	                            		System.out.println("Out of tries! Login again.");
 	                            	}
-	                            }
-                    		}
-                        }	        		
-                    	else {
-                    		System.out.println("Username not found in records! Login again.");
-                    	}
-                    }
-                    System.out.println("Enter Course Code:");
-                    String courseCode5=sc.nextLine();
-                    System.out.println("Enter your Index Number:");
-                    int studentIndex = sc.nextInt();
-                    System.out.println("Enter peer's Index Number");
-                    int peerIndex = sc.nextInt();
-                    StudentCourseControl.swapIndexNumberWithPeers(student,peer,courseCode5,studentIndex,peerIndex);
-			}
-                        sc.close();
-                        break;
+                				}
+                			}
+                		}	        		
+                		else {
+                			System.out.println("Username not found in records! Login again.");
+                		}
+	                    System.out.println("Enter Course Code:");
+	                    String courseCode5=sc.nextLine();
+	                    System.out.println("Enter your Index Number:");
+	                    int studentIndex = sc.nextInt();
+	                    sc.nextLine(); // Consume newline character
+	                    System.out.println("Enter peer's Index Number");
+	                    int peerIndex = sc.nextInt();
+	                    sc.nextLine(); // Consume newline character
+	                    StudentCourseControl.swapIndexNumberWithPeers(student,peer,courseCode5,studentIndex,peerIndex);
+					}                  
+                	break;
+                	
                   default: 
                         break;
-                    }
-			
-                  
+			}
 		}
 	}
 }
+
     

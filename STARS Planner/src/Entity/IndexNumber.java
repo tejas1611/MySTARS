@@ -1,25 +1,27 @@
 package Entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class IndexNumber {
-	
+public class IndexNumber implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private int indexNum;
 	private String tutorialGroup;
-	Queue<Student> waitlist;
 	private int vacancy;
-	private ArrayList<Integer> students =new ArrayList<Integer>();
-	private ArrayList<Lesson> lessons =new ArrayList<Lesson>();
+	Queue<Student> waitlist;
+	private ArrayList<Integer> students;
+	private ArrayList<Lesson> lessons;
 	
 	
 	public IndexNumber(int indexNum, String tutorialGroup, int capacity) {
 		this.indexNum = indexNum;
 		this.tutorialGroup = tutorialGroup;
 		this.vacancy = capacity;
-		this.students = null;
-		this.lessons = null;
+		this.students = new ArrayList<Integer>();
+		this.lessons = new ArrayList<Lesson>();
 		this.waitlist = new LinkedList<Student>();
 	}
 	
@@ -40,8 +42,8 @@ public class IndexNumber {
 			LessonType lessonType = l.getLessonType();
 			String venue = l.getVenue();
 			String week = l.getWeek();
-			String day = l.getDay();
-			System.out.println(lessonType + " " + venue + " " + week + " " + day + " " + l.printStartTime() + "-" + l.printEndTime());
+			Day day = l.getDay();
+			System.out.println(lessonType + " " + venue + " " + week + " " + day.toString() + " " + l.printStartTime() + "-" + l.printEndTime());
 		}
 	}
 

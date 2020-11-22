@@ -12,7 +12,7 @@ public class Course implements Serializable {
 	private String school;
 	private String courseType;
 	private int au;
-	private ArrayList<IndexNumber> indexes = new ArrayList<IndexNumber>();
+	private ArrayList<IndexNumber> indexes ;
 	
 	public Course(String courseCode, String courseName, String school, String courseType, int au) {
 		this.courseCode=courseCode;
@@ -21,7 +21,7 @@ public class Course implements Serializable {
 		this.courseType=courseType;
 
 		this.au=au;
-		this.indexes = null;
+		this.indexes = new ArrayList<IndexNumber>();
 	}
 	
 	public Course(Course another) {

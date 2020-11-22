@@ -7,8 +7,8 @@ import java.util.HashMap;
 public class Student extends Person {
 
 	private static final long serialVersionUID = 1L;
-	private static Calendar accessStart = new GregorianCalendar(2020, 11, 15, 0, 0);
-	private static Calendar accessEnd = new GregorianCalendar(2020, 11, 30, 23, 59);
+	private static Calendar accessStart = new GregorianCalendar(2020, 10, 15, 0, 0);
+	private static Calendar accessEnd = new GregorianCalendar(2020, 10, 30, 23, 59);
 	
 	private int matricNo;
 	private int AULimit;
@@ -88,9 +88,25 @@ public class Student extends Person {
 	
 	public static Calendar getAccessStart() { return accessStart; }
 	public static void setAccessStart(Calendar accessStart) { Student.accessStart = accessStart; }
+	public static String printaccessStart() {
+		String year = String.valueOf(accessStart.get(Calendar.YEAR));
+		String month = String.valueOf(accessStart.get(Calendar.MONTH)+1);
+		String day = String.valueOf(accessStart.get(Calendar.DAY_OF_MONTH));
+		String hour = String.valueOf(accessStart.get(Calendar.HOUR_OF_DAY));
+		String minute = String.valueOf(accessStart.get(Calendar.MINUTE));
+		return (day+"-"+month+"-"+year + " " + hour+":"+minute); 
+	}
 
 	public static Calendar getAccessEnd() {	return accessEnd; }
 	public static void setAccessEnd(Calendar accessEnd) { Student.accessEnd = accessEnd; }
+	public static String printaccessEnd() { 
+		String year = String.valueOf(accessEnd.get(Calendar.YEAR));
+		String month = String.valueOf(accessEnd.get(Calendar.MONTH)+1);
+		String day = String.valueOf(accessEnd.get(Calendar.DAY_OF_MONTH));
+		String hour = String.valueOf(accessEnd.get(Calendar.HOUR_OF_DAY));
+		String minute = String.valueOf(accessEnd.get(Calendar.MINUTE));
+		return (day+"-"+month+"-"+year + " " + hour+":"+minute);  
+	}
 
 	public String getSchool() { return school; }
 	
