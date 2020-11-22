@@ -50,6 +50,11 @@ public class Course implements Serializable {
 	public void addIndex (IndexNumber ind) { indexes.add(ind); }
 	public ArrayList<IndexNumber> getIndexes() { return indexes; }
 	public void setIndexes(ArrayList<IndexNumber> indexes) { this.indexes = indexes; }
+	public void printIndexes() {
+		for (IndexNumber num : indexes) { 		      
+            System.out.print(num.getIndexNum() + " "); 		
+        }
+	}
 	
 	public String getSchool() { return school; }
 	public void setSchool(String school) { this.school = school;}

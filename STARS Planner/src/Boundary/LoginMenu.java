@@ -79,7 +79,7 @@ public class LoginMenu {
 	}
 
     @SuppressWarnings("unchecked")
-	public static Student getStudentObject(){
+	public static Student getStudentObject() {
         List<Student> studentList = (DatabaseControl.readSerializedObject("studentDB"));
         Student st=null;
         for(int i = 0 ; i < studentList.size() ; i++) {

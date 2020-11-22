@@ -26,14 +26,7 @@ public class CourseControl {
 		return course;
 	}	
 	
-    public static int getVacancy(String courseCode, int indexNumber) {
-    	Course course;
-		try {
-			course = CourseControl.findCourse(courseCode);
-		} catch (Exception e) {
-			return -1;
-		}
-		
+    public static int getVacancy(Course course, int indexNumber) {
         for (IndexNumber i: course.getIndexes()){
             if (i.getIndexNum()==indexNumber){
                 return i.getVacancy();
@@ -48,6 +41,7 @@ public class CourseControl {
     		studentsID = ((Course) o).getStudents();
     	else if(o instanceof IndexNumber)
     		studentsID = ((IndexNumber) o).getStudents();
+    	
     	ArrayList<Student> students = new ArrayList<Student>();
     	
     	// Read students from database

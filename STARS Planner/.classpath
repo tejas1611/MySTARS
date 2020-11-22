@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/tejas/Desktop/NTU Stuff/Y2S1/Object Oriented Design &amp; Prog/Project/javax.mail.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tejas/git/MySTARS/STARS Planner/javax.mailOld.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

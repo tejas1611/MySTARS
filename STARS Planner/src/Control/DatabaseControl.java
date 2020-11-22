@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
+
+import Entity.*;
+
 import java.util.ArrayList;
 
 // add import java.io.Serializable;
@@ -44,5 +47,32 @@ public class DatabaseControl
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	public static void updateInFile(Object o) {
+		if(o instanceof Student) {
+			List<Student> studList = (List<Student>) readSerializedObject("studentDB");
+			for(int index=0; index<studList.size(); index++) {
+				Student s = studList.get(index);
+				if(s.getMatricNo()==((Student)o).getMatricNo()) {
+					studList.set(index, (Student)o);
+					break;
+				}
+			}
+			writeSerializedObject("studentDB", studList);
+		}
+		else if(o instanceof Course) {
+			List<Course> courseList = (List<Course>) readSerializedObject("courseDB");
+			for(int index=0; index<courseList.size(); index++) {
+				Course c = courseList.get(index);
+				if(c.getCourseCode().equals(((Course)o).getCourseCode())) {
+					courseList.set(index, (Course)o);
+					break;
+				}
+			}
+			writeSerializedObject("courseDB", courseList);
+		}
+		
+			
 	}
 }

@@ -12,13 +12,16 @@ import Entity.*;
 
 public class StudentMenu {
 	
-	public static void stdMenu(Student student)  {
+	public static void stdMenu()  {
         Calendar startDate = Student.getAccessStart();
         Calendar endDate = Student.getAccessEnd();
 		int studentChoice=0;
 		while(studentChoice != 7) {
+			Student student = LoginMenu.getStudentObject();
 			StarsPlanner.clearScreen();
 			Calendar currentDate = Calendar.getInstance();
+			
+			// Check Access Period
 			if (currentDate.before(startDate) || endDate.before(currentDate)){
 				System.out.println("Student is not allowed to access menu outside access period");
 				System.out.println("Access period: " + Student.printaccessStart() + " to " + Student.printaccessEnd());
@@ -38,39 +41,56 @@ public class StudentMenu {
 			Scanner sc = new Scanner(System.in);
 			studentChoice = sc.nextInt();
 			sc.nextLine(); // Consume newline character
+			
 			switch(studentChoice) {
 		     	case 1:
-		                System.out.print("Enter Course Code: ");
-		                String courseID = sc.nextLine();
-		                Course course = CourseControl.findCourse(courseID);
-		                if(course==null) {
-		                	System.out.println("Course code not found");
-		                	break;
-		                }
-		                ArrayList<IndexNumber> indexNum =course.getIndexes();
-		                System.out.print("Following index groups were found: ");
-		                for (IndexNumber num : indexNum) { 		      
-		                    System.out.print(num.getIndexNum() + " "); 		
-		                }
-		                System.out.print("\nEnter your required index number ");
-		                int index = sc.nextInt();   
-		                sc.nextLine(); // Consume newline character
-		                try {
-		                	StudentCourseControl.addCourse(student, courseID, index);
-		                } catch (Exception e) {
-		                	System.out.print("Error encountered");
-						}
-	                break;   
+		     		System.out.println();
+	                System.out.print("Enter Course Code: ");
+	                String courseID = sc.nextLine();
+	                Course course = CourseControl.findCourse(courseID);
+	                if(course==null) {
+	                	System.out.println("Course code not found");
+	                	break;
+	                }
+	                if(!StudentCourseControl.checkCourseRegistered(student, course)) {
+	                	System.out.println("Student is already enrolled in course " + course.printName());	                	
+	                	break;
+	                }
+	                
+	                System.out.print("Following index groups were found: "); course.printIndexes();
+	                System.out.print("\nEnter your required index number ");
+	                
+	                int index = sc.nextInt();   
+	                sc.nextLine(); // Consume newline character
+	                
+	                try {
+	                	StudentCourseControl.addCourse(student, course, index);
+	                } catch (Exception e) {
+	                	System.out.print("Error encountered in Add course");
+					}
+	                
+                break;   
 	                
 	            case 2:
-		            	System.out.println("Enter Course Code");
-		                String courseID2 = sc.nextLine();    
-		                try {
-							StudentCourseControl.dropCourse(student, courseID2);
-						} catch (Exception e) {
-							System.out.print("Error Encountered");
-						}
-	                break;
+	            	System.out.println();
+	            	System.out.println("Enter Course Code");
+	            	String courseID2 = sc.nextLine();    
+	            	Course course2 = CourseControl.findCourse(courseID2);
+	                if(course2==null) {
+	                	System.out.println("Course code not found");
+	                	break;
+	                }
+	            	if(StudentCourseControl.checkCourseRegistered(student, course2)) {
+	            		System.out.println("Course not registered.");
+	            		break;
+	            	}
+	            	
+	                try {
+						StudentCourseControl.dropCourse(student, course2);
+					} catch (Exception e) {
+						System.out.print("Error Encountered in Drop course");
+					}
+                break;
 	                
 	            case 3: 
 	            	StudentCourseControl.printCourseRegistered(student);
@@ -81,15 +101,17 @@ public class StudentMenu {
 	                System.out.println("Enter Course Code: ");
 	                String courseCode3 = sc.nextLine();
 	                Course course3=CourseControl.findCourse(courseCode3);
-	                ArrayList<IndexNumber> indexNumber =course3.getIndexes();
-	                for (IndexNumber inum : indexNumber)
-	                { 		      
-	                    System.out.println(inum.getIndexNum()); 		
+	                if(course3==null) {
+	                	System.out.println("Course code not found");
+	                	break;
 	                }
-	                System.out.println("Enter your required index number to check for vacancy:");
+	                
+	                System.out.print("Following index groups were found: "); course3.printIndexes();
+	                System.out.print("\nEnter your required index number ");
+	                
 	                indexnumber=sc.nextInt(); 
 	                sc.nextLine(); // Consume newline character
-	                CourseControl.getVacancy(courseCode3, indexnumber);          
+	                System.out.println("Vacancies in this course: " + CourseControl.getVacancy(course3, indexnumber));          
 	                break;
 	                
 	            case 5:

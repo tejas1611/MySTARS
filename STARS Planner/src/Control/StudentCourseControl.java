@@ -2,6 +2,8 @@ package Control;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
+
 import Entity.Course;
 import Entity.IndexNumber;
 import Entity.Lesson;
@@ -9,32 +11,28 @@ import Entity.Student;
 
 public class StudentCourseControl {
 	
-    public static void addCourse(Student student, String courseID, int index) throws Exception {
+    public static void addCourse(Student student, Course course, int index) throws Exception {
     	boolean valid = false;
     	
-    	Course course = CourseControl.findCourse(courseID);
-    	if(course==null) {
-    		throw new Exception("Course not found.");
-    	}
     	// Check AU limit for student
     	int totalAU = student.getTotalAU();
 		if(totalAU+course.getAu() > student.getAULimit() && !student.isOverloadPermission()) {
-			throw new Exception("Student not allowed to overload.");
+			System.out.println("Student not allowed to overload.");
+			throw new Exception();
 		}
 		
-		// Check if Course already registered, or invalid Index Number
+		// Check for invalid Index Number
 		int i;
 		ArrayList<IndexNumber> indices = course.getIndexes();
 		
-		if(student.getCourses().containsKey(course))
-			throw new Exception("Student is already enrolled in course " + course.printName());
-		else {
-			for(i=0;i<indices.size();i++)
-				if(indices.get(i).getIndexNum() == index) {
-					valid = true;
-					break;
-				}
-			if(!valid) throw new Exception("Index Number not found in course");
+		for(i=0;i<indices.size();i++) {
+			if(indices.get(i).getIndexNum() == index) {
+				valid = true;
+				break;
+			}
+		}
+		if(!valid) {
+			System.out.println("Index Number not found in course");
 		}
 		
 		// Check for timetable clash
@@ -46,13 +44,22 @@ public class StudentCourseControl {
 		
 		if(vacancyAvailable && valid) {
 			student.addCourse(course, indices.get(i));
-			indices.get(i).addStudent(student);
+			IndexNumber i_temp = indices.get(i);
+			i_temp.addStudent(student);
+			indices.set(i, i_temp);
 			System.out.println("Course successfully registered");
+			try {
+				NotifyStudent.notifyEmail(student,course,0);
+			} catch (Exception e) {
+				System.out.print("Unable to send an E-mail.");
+			}
 		}
 		else {
 			if(student.getNumberWaitlist() < 5) {
 				student.addWaitlist(course, indices.get(i));
-				indices.get(i).putInWaitlist(student);
+				IndexNumber i_temp = indices.get(i);
+				i_temp.putInWaitlist(student);
+				indices.set(i, i_temp);
 				System.out.println("No vacancy available. Added to waitlist.");
 			}
 			else {
@@ -60,32 +67,41 @@ public class StudentCourseControl {
 				System.out.println("No vacancy available. Course waitlist limit (5) reached.");
 			}
 		}
-		try {
-			NotifyStudent.notifyEmail(student,course,0);
-		} catch (Exception e) {
-			System.out.print("Unable to send an E-mail.");
-		}
+		course.setIndexes(indices);
+		
+		DatabaseControl.updateInFile(course);
+		DatabaseControl.updateInFile(student);
 		return;
     }
 
-    public static void dropCourse(Student student, String courseID) throws Exception {
-    	// Check if student enrolled in course
-		Course course = CourseControl.findCourse(courseID);
-    	if(course==null) {
-    		throw new Exception("Course not found.");
-    	}
-    	if(!student.getCourses().containsKey(course))
-			throw new Exception("Student is not enrolled in course " + course.getCourseCode() + ": " + course.getCourseName());
-		else {
-			IndexNumber index = student.getCourses().get(course);
-			student.removeCourse(course);
-			Student studentToReg = index.findNextInWaitlist();
-			addCourse(studentToReg, courseID, index.getIndexNum());
+    public static void dropCourse(Student student, Course course) throws Exception {
+    	// Remove student from course
+    	IndexNumber index = student.getCourses().get(course);
+    	student.removeCourse(course);
+    	index.removeStudent(student);
+//    	try {
+//			NotifyStudent.notifyEmail(student,course,2);
+//		} catch (Exception e) {
+//			System.out.print("Unable to send an E-mail.");
+//		}
+    	ArrayList<IndexNumber> indices = course.getIndexes();
+    	int i;
+    	for(i=0;i<indices.size();i++) {
+			if(indices.get(i).getIndexNum() == index.getIndexNum()) {
+				indices.set(i, index);
+				break;
+			}
 		}
-		try {
-			NotifyStudent.notifyEmail(student,course,2);
-		} catch (Exception e) {
-			System.out.print("Unable to send an E-mail.");
+    	course.setIndexes(indices);
+		DatabaseControl.updateInFile(student);
+		DatabaseControl.updateInFile(course);
+		
+		// Check for Waitlist
+		try { 
+			Student studentToReg = index.findNextInWaitlist();
+			addCourse(studentToReg, course, index.getIndexNum());
+		} catch (NoSuchElementException e) {
+			return;
 		}
     }
     
@@ -96,19 +112,24 @@ public class StudentCourseControl {
 			String ind = String.valueOf(student.getCourses().get(c).getIndexNum());
 			coursesString = coursesString + info + " " + ind + "\n";
 		}
-    	System.out.println(coursesString);
+    	if(coursesString.equals(""))
+    		System.out.println("\n\nNo courses have been registered.");
+    	else 
+    		System.out.println("\n\n" + coursesString);
 		return coursesString;
     }
     
-    public static void changeIndexNumberOfCourse(Student student, String courseCode, int newIndex){
+    public static void changeIndexNumberOfCourse(Student student, String courseCode, int newIndex) {
+    	
+    	// TODO update index number
 		Course course = null;
 		course = CourseControl.findCourse(courseCode);
         for(IndexNumber i : course.getIndexes()) {
     		if (i.getIndexNum() == newIndex ) {
 				if (i.getVacancy() > 0) {
 					try {
-						dropCourse(student, courseCode);
-						addCourse(student, courseCode, newIndex);
+						dropCourse(student, course);
+						addCourse(student, course, newIndex);
 					} catch (Exception e) {
 						System.out.println("Error encountered");
 					}
@@ -143,10 +164,10 @@ public class StudentCourseControl {
 		}
 		if (studentValid == true && peerValid==true) {
 			try {
-			StudentCourseControl.dropCourse(student, courseCode);
-			StudentCourseControl.addCourse(student, courseCode, peerIndex);
-			StudentCourseControl.dropCourse(peer, courseCode);
-			StudentCourseControl.addCourse(peer, courseCode, studentIndex);
+			StudentCourseControl.dropCourse(student, course);
+			StudentCourseControl.addCourse(student, course, peerIndex);
+			StudentCourseControl.dropCourse(peer, course);
+			StudentCourseControl.addCourse(peer, course, studentIndex);
 			} catch(Exception e) {
 				System.out.println("Error encountered");
 			}
@@ -157,7 +178,14 @@ public class StudentCourseControl {
 	}
 		
 	
-    
+    public static Boolean checkCourseRegistered(Student student, Course course) {
+    	for(Course c : student.getCourses().keySet()) {
+			if(c.getCourseCode().equals(course.getCourseCode())) {
+				return false;
+			}
+		}
+    	return true;
+    }
     
     public static Boolean timeClashBetweenModules(Student student, Course courseToReg, IndexNumber indexToReg) {
 		Boolean clash = false;

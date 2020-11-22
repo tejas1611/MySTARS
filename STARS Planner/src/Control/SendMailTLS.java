@@ -17,10 +17,15 @@ public class SendMailTLS {
 		final String username = "stars.planner.01@gmail.com";  //do-not-reply@blackboard.com "; 		final String username = "kartikeyavedula@gmail.com";  //do-not-reply@blackboard.com "; 
         String password = "hello_java@123";
 		Properties props = new Properties();
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.socketFactory.port", "465");
+		props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.port", "465");
+		/*props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
+		props.put("mail.smtp.port", "587");*/
 		Session session = Session.getInstance(props,
 		new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -30,10 +35,10 @@ public class SendMailTLS {
 
 		try {
 
-			Message message = new MimeMessage(session);
+			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(username));
 			message.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient)); // to be added an email addr
-			message.setSubject("COURSE(S) RGISTERED");
+			message.setSubject("COURSE(S) REGISTERED");
 			if(flag==1){
 				message.setText(printWaitlist(student, course));
 			}
@@ -46,6 +51,7 @@ public class SendMailTLS {
 			else{
 				System.out.println("Error in the type of email to be sent!");
 			}
+			//message.setText(StudentCourseControl.printCourseRegistered(student));
 			Transport.send(message);
 
 			System.out.println("Done");

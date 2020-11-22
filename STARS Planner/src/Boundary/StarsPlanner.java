@@ -29,8 +29,7 @@ public class StarsPlanner{
         
         switch(domain){
             case 1: 
-                Student student= LoginMenu.getStudentObject();
-                StudentMenu.stdMenu(student);
+                StudentMenu.stdMenu();
                 StarsPlanner.main(null);
                 break;
                 

@@ -372,10 +372,10 @@ public class AdminControl {
         System.out.println("|         Name         |  Gender  |     Nationality    |");
         System.out.println("========================================================");           
         for (int i = 0; i < students.size(); i++) {
-            Student student = (Student) students.get(i);
-            String name = student.getName();
-            String gender = student.getGender();
-            String nationality = student.getNationality();
+            Student s = (Student) students.get(i);
+            String name = s.getName();
+            String gender = s.getGender();
+            String nationality = s.getNationality();
             System.out.format("| %-21s| %-9s| %-19s|\n",name,gender,nationality);
         }
         System.out.println("========================================================");  

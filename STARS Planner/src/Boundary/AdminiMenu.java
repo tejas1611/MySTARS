@@ -144,7 +144,7 @@ public class AdminiMenu {
 				                System.out.print("\nEnter your required index number ");
 				                int indexNumber = sc.nextInt();
 				                sc.nextLine(); // Consume newline character
-				                System.out.println("Current Vacancy in Index: " + CourseControl.getVacancy(courseCode2, indexNumber));
+				                System.out.println("Current Vacancy in Index: " + CourseControl.getVacancy(course, indexNumber));
 				                
 				                System.out.print("Enter the updated vacancy: ");
 				                int vacancy = sc.nextInt();
@@ -201,7 +201,7 @@ public class AdminiMenu {
 		                }
 		                System.out.print("\nEnter your required index number ");
 		                int indexNumber = sc.nextInt();
-		                System.out.println("Current Vacancy in Index: " + CourseControl.getVacancy(courseCode3, indexNumber));
+		                System.out.println("Current Vacancy in Index: " + CourseControl.getVacancy(courseVacancy, indexNumber));
 		                break;
 		                
 	                case 6:
