@@ -120,7 +120,8 @@ public class AdminControl {
 					}
 					student.removeWaitlist(newCourse);
 					try {
-						NotifyStudent.notifyEmail(student,newCourse,1);
+						System.out.println("Sending Confirmation...");
+						SendMailTLS.sendMail(student.getEmail(), student, newCourse, 1);
 					} catch (Exception e) {
 						System.out.print("Unable to send an E-mail.");
 					}
@@ -144,13 +145,14 @@ public class AdminControl {
 				break;
 			}
         }
+		
 		// Update students and database
     	List<Student> studentsInCourse = CourseControl.getStudents(newCourse);
     	List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
     	for(int index=0; index<studentDB.size(); index++) {
     		Student s = studentDB.get(index);
     		if(studentsInCourse.contains(s)) {
-	    		s.addCourse(newCourse, s.getIndexofCourse(oldCourse));
+	    		s.addCourse(newCourse, s.findIndex(oldCourse));
 	    		s.removeCourse(oldCourse);
 	    		studentDB.set(index, s);
     		}
@@ -162,55 +164,42 @@ public class AdminControl {
     
     @SuppressWarnings("unchecked")
 	public static void updateCourseIndex(String courseCode, int indexNumber, int newIndex) {
-        Course oldCourse = CourseControl.findCourse(courseCode);
-		if (oldCourse == null) {
+        Course course = CourseControl.findCourse(courseCode);
+		if (course == null) {
 			System.out.println("Error: Course not found");
             return;
 		}
-		Course newCourse = new Course(oldCourse);
         if(!checkCourseIndex(courseCode, indexNumber)){
 			System.out.println("This index number does not exist!");
 			return;
 		}
         
         // Search correct index and update inside newCourse object
-        IndexNumber newIndexNumber = null;
-        ArrayList<IndexNumber> indexNumbers = newCourse.getIndexes();
+        ArrayList<IndexNumber> indexNumbers = course.getIndexes();
+        IndexNumber oldIndexNumber = indexNumbers.get(0);
         for(int i=0; i<indexNumbers.size(); i++) {
-        	IndexNumber oldIndexNumber = indexNumbers.get(i);
+        	oldIndexNumber = indexNumbers.get(i);
         	if(oldIndexNumber.getIndexNum() == indexNumber) {
-        		newIndexNumber = new IndexNumber(oldIndexNumber);
-        		newIndexNumber.setIndexNum(newIndex);
-        		indexNumbers.set(i, newIndexNumber);
+        		oldIndexNumber.setIndexNum(newIndex);
+        		indexNumbers.set(i, oldIndexNumber);
         		break;
         	}
         }
-        newCourse.setIndexes(indexNumbers);
-        
-        // Update in course database
-		List<Course> courseDB = (List<Course>) DatabaseControl.readSerializedObject("courseDB");
-		for(int index=0; index<courseDB.size(); index++) {
-			Course c = courseDB.get(index);
-			if(c.equals(oldCourse)) {
-				courseDB.remove(index);
-				courseDB.add(index, newCourse);
-				break;
-			}
-        }
+        course.setIndexes(indexNumbers);
+        DatabaseControl.updateInFile(course);
 		
 		// Update students and database
-    	List<Student> studentsInIndex = CourseControl.getStudents(newIndexNumber);
+    	List<Integer> studentsInIndex = oldIndexNumber.getStudents();
     	List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
+    	
     	for(int index=0; index<studentDB.size(); index++) {
     		Student s = studentDB.get(index);
-    		if(studentsInIndex.contains(s)) {
-	    		s.addCourse(newCourse, s.getIndexofCourse(oldCourse));
-	    		s.removeCourse(oldCourse);
+    		if(studentsInIndex.contains(Integer.valueOf(s.getMatricNo()))) {
+    			s.removeCourse(course);
+	    		s.addCourse(course, oldIndexNumber);
 	    		studentDB.set(index, s);
     		}
     	}
-    	
-    	DatabaseControl.writeSerializedObject("courseDB", courseDB);
     	DatabaseControl.writeSerializedObject("studentDB", studentDB);
     }
 
@@ -228,21 +217,21 @@ public class AdminControl {
 		List<Course> courseDB = (List<Course>) DatabaseControl.readSerializedObject("courseDB");
     	for(int index=0; index<courseDB.size(); index++) {
     		Course c = courseDB.get(index);
-    		if(c.equals(oldCourse)) {
-    			courseDB.remove(index);
-    			courseDB.add(index, newCourse);
+    		if(c.getCourseName().equals(oldCourse.getCourseName())) {
+    			courseDB.set(index, newCourse);
     			break;
     		}
     	}
     	
     	// Update students and database
-    	List<Student> studentsInCourse = CourseControl.getStudents(newCourse);
+    	ArrayList<Integer> studentsInCourse = newCourse.getStudents();
     	List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
     	for(int index=0; index<studentDB.size(); index++) {
     		Student s = studentDB.get(index);
-    		if(studentsInCourse.contains(s)) {
-	    		s.addCourse(newCourse, s.getIndexofCourse(oldCourse));
+    		if(studentsInCourse.contains(Integer.valueOf(s.getMatricNo()))) {
+	    		IndexNumber toAdd = s.findIndex(oldCourse);
 	    		s.removeCourse(oldCourse);
+    			s.addCourse(newCourse, toAdd);
 	    		studentDB.set(index, s);
     		}
     	}
@@ -253,43 +242,34 @@ public class AdminControl {
 
     @SuppressWarnings("unchecked")
 	public static void updateSchool(String courseCode, String setSchool) {
-        Course oldCourse = CourseControl.findCourse(courseCode);
-		if (oldCourse == null) {
+        Course course = CourseControl.findCourse(courseCode);
+		if (course == null) {
 			System.out.println("Error: Course not found");
             return;
 		}
-		Course newCourse = new Course(oldCourse);
-		newCourse.setSchool(setSchool);
+		course.setSchool(setSchool);
 
 		// Update in course database
-		List<Course> courseDB = (List<Course>) DatabaseControl.readSerializedObject("courseDB");
-		for(int index=0; index<courseDB.size(); index++) {
-			Course c = courseDB.get(index);
-			if(c.equals(oldCourse)) {
-				courseDB.remove(index);
-				courseDB.add(index, newCourse);
-				break;
-			}
-        }
+		DatabaseControl.updateInFile(course);
 		
 		// Update students and database
-    	List<Student> studentsInCourse = CourseControl.getStudents(newCourse);
+    	ArrayList<Integer> studentsInCourse = course.getStudents();
     	List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
     	for(int index=0; index<studentDB.size(); index++) {
     		Student s = studentDB.get(index);
-    		if(studentsInCourse.contains(s)) {
-	    		s.addCourse(newCourse, s.getIndexofCourse(oldCourse));
-	    		s.removeCourse(oldCourse);
+    		if(studentsInCourse.contains(Integer.valueOf(s.getMatricNo()))) {
+	    		IndexNumber toAdd = s.findIndex(course);
+	    		s.removeCourse(course);
+    			s.addCourse(course, toAdd);
 	    		studentDB.set(index, s);
     		}
     	}
     	
-    	DatabaseControl.writeSerializedObject("courseDB", courseDB);
     	DatabaseControl.writeSerializedObject("studentDB", studentDB);
     }
 
     @SuppressWarnings("unchecked")
-	public void addCourseIndex(String courseCode, int indexNumber, String tutorialGroup, int capacity) {
+	public static void addCourseIndex(String courseCode, int indexNumber, String tutorialGroup, int capacity) {
         Course oldCourse = CourseControl.findCourse(courseCode);
 		if (oldCourse == null) {
 			System.out.println("Error: Course not found");
@@ -383,18 +363,25 @@ public class AdminControl {
     }
     
     @SuppressWarnings("unchecked")
-	public static void grantPermissionForOverloading(String studentName, int matricNumber) {
+	public static void grantPermissionForOverloading(int matricNumber) {
+    	boolean flag = false;
     	List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
     	for(int index=0; index<studentDB.size(); index++) {
     		Student s = studentDB.get(index);
     		if(s.getMatricNo() == matricNumber) {
+    			flag=true;
+    			System.out.print("Student Found: "); s.printInfo();
+    			System.out.print("\nPress Y to confirm ");
+    			Scanner scanner = new Scanner(System.in);
+    			if(!scanner.nextLine().toLowerCase().equals("y"))
+    				return;
     			s.setOverloadPermission(true);
-    			studentDB.set(index, s);
-    			break;
+    			DatabaseControl.updateInFile(s);
+    			return;
     		}
     	}
     	
-    	DatabaseControl.writeSerializedObject("studentDB", studentDB);
+    	if(flag==false) System.out.println("Matric number not found.");
     }
 
 }

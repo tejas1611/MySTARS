@@ -1,14 +1,10 @@
 package Boundary;
 
 import java.util.Scanner;
-import java.util.List;
-import java.util.ArrayList;
-
 import Entity.*;;
 
-public class StarsPlanner{
-    List<Student> listOfStudents = new ArrayList<Student>();
-    
+public class StarsPlanner {
+	    
     public static void main(String args[]) {
     	clearScreen();
         int domain=0, loginAgain=0;

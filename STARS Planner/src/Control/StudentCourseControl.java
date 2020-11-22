@@ -24,7 +24,6 @@ public class StudentCourseControl {
 		// Check for invalid Index Number
 		int i;
 		ArrayList<IndexNumber> indices = course.getIndexes();
-		
 		for(i=0;i<indices.size();i++) {
 			if(indices.get(i).getIndexNum() == index) {
 				valid = true;
@@ -36,7 +35,10 @@ public class StudentCourseControl {
 		}
 		
 		// Check for timetable clash
-		if(timeClashBetweenModules(student, course, indices.get(i))) valid = false;
+		if(timeClashBetweenModules(student, course, indices.get(i))) {
+			valid = false;
+			return;
+		}
 		
 		// Check if vacancy available
 		boolean vacancyAvailable = true;
@@ -49,9 +51,10 @@ public class StudentCourseControl {
 			indices.set(i, i_temp);
 			System.out.println("Course successfully registered");
 			try {
-				NotifyStudent.notifyEmail(student,course,0);
+				System.out.println("Sending Confirmation...");
+				SendMailTLS.sendMail(student.getEmail(), student, course, 0);
 			} catch (Exception e) {
-				System.out.print("Unable to send an E-mail.");
+				System.out.print("Unable to send an E-mail. : " + e);
 			}
 		}
 		else {
@@ -76,14 +79,16 @@ public class StudentCourseControl {
 
     public static void dropCourse(Student student, Course course) throws Exception {
     	// Remove student from course
-    	IndexNumber index = student.getCourses().get(course);
+    	IndexNumber index = student.findIndex(course);
     	student.removeCourse(course);
     	index.removeStudent(student);
-//    	try {
-//			NotifyStudent.notifyEmail(student,course,2);
-//		} catch (Exception e) {
-//			System.out.print("Unable to send an E-mail.");
-//		}
+    	try {
+    		System.out.println("Sending Confirmation...");
+    		SendMailTLS.sendMail(student.getEmail(), student, course, 2);
+			//NotifyStudent.notifyEmail(student,course,2);
+		} catch (Exception e) {
+			System.out.print("Unable to send an E-mail.");
+		}
     	ArrayList<IndexNumber> indices = course.getIndexes();
     	int i;
     	for(i=0;i<indices.size();i++) {
@@ -101,7 +106,7 @@ public class StudentCourseControl {
 			Student studentToReg = index.findNextInWaitlist();
 			addCourse(studentToReg, course, index.getIndexNum());
 		} catch (NoSuchElementException e) {
-			return;
+			System.out.print("");
 		}
     }
     
@@ -115,15 +120,11 @@ public class StudentCourseControl {
     	if(coursesString.equals(""))
     		System.out.println("\n\nNo courses have been registered.");
     	else 
-    		System.out.println("\n\n" + coursesString);
+    		System.out.println("\n\nCourses Registered:\n" + coursesString);
 		return coursesString;
     }
     
-    public static void changeIndexNumberOfCourse(Student student, String courseCode, int newIndex) {
-    	
-    	// TODO update index number
-		Course course = null;
-		course = CourseControl.findCourse(courseCode);
+    public static void changeIndexNumberOfCourse(Student student, Course course, int newIndex) {
         for(IndexNumber i : course.getIndexes()) {
     		if (i.getIndexNum() == newIndex ) {
 				if (i.getVacancy() > 0) {
@@ -133,11 +134,10 @@ public class StudentCourseControl {
 					} catch (Exception e) {
 						System.out.println("Error encountered");
 					}
-					
 					return;
 				}
 				else {
-					System.out.println("Vacancy is full.");
+					System.out.println("No vacancy left. Unable to change index.");
 					return;
 				}
 			}
@@ -197,8 +197,11 @@ public class StudentCourseControl {
 		for(Course courseRegistered : courses.keySet() ) {
 			for(Lesson lessonRegistered : courses.get(courseRegistered).getLessons()) {
 				for(Lesson lessonToReg : indexToReg.getLessons()) {
-					if(lessonToReg.getDay()==lessonRegistered.getDay() && 
-							lessonToReg.getWeek()==lessonRegistered.getWeek()) {
+					boolean commonDay = lessonToReg.getDay()==lessonRegistered.getDay();
+					boolean commonWeek = lessonToReg.getWeek().equals(lessonRegistered.getWeek()) ||
+							lessonToReg.getWeek().toLowerCase().equals("all") ||
+							lessonRegistered.getWeek().toLowerCase().equals("all");
+					if(commonDay && commonWeek) {
 						if(lessonToReg.getStartTime().compareTo(lessonRegistered.getStartTime()) == 0) clash = true;
 						if(lessonToReg.getEndTime().compareTo(lessonRegistered.getEndTime()) == 0) clash= true;
 						if(lessonToReg.getStartTime().compareTo(lessonRegistered.getEndTime()) < 0 && 
@@ -219,14 +222,14 @@ public class StudentCourseControl {
 		}
 		
 		if(clash) {
-			System.out.println("Clash found in timetable! Unable to register course.");
+			System.out.println("\nClash found in timetable! Unable to register course.");
 			System.out.println("Registered course: " + courseClashing.printName());
-			System.out.println("Lesson clash:      " + lessonClashing.getLessonType());
-			System.out.println("Timings: " + lessonClashing.getStartTime() + " - " + lessonClashing.getEndTime());
+			System.out.println("Lesson registered: " + lessonClashing.getLessonType());
+			System.out.println("Timings: " + lessonClashing.getStartTime() + " - " + lessonClashing.getEndTime() + ", " + lessonClashing.getDay().toString());
 			System.out.println();
 			System.out.println("Course to register: " + courseToReg.printName());
 			System.out.println("Lesson to register: " + lessonToRegClash.getLessonType());
-			System.out.println("Timings: " + lessonToRegClash.getStartTime() + " - " + lessonToRegClash.getEndTime());
+			System.out.println("Timings: " + lessonToRegClash.getStartTime() + " - " + lessonToRegClash.getEndTime() + ", " + lessonClashing.getDay().toString());
 		}
 		return clash;
     }

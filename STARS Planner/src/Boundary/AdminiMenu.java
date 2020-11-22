@@ -16,7 +16,7 @@ public class AdminiMenu {
 	public static void AdmMenu(Admin admin) {
 			int adminChoice=0;
 			Scanner sc = new Scanner(System.in);
-			while(adminChoice != 8) {
+			while(adminChoice != 9) {
 				StarsPlanner.clearScreen();
 				System.out.println("\n\n\n***** ADMIN PANEL *****");
 			    System.out.println("(1): Edit student access period");
@@ -26,7 +26,8 @@ public class AdminiMenu {
 			    System.out.println("(5): Check available slot for an index number");
 			    System.out.println("(6): Print student list by index number");
 			    System.out.println("(7): Print student list by course");
-			    System.out.println("(8): Exit");   
+				System.out.println("(8): Allow overloading for a student");
+			    System.out.println("(9): Exit");   
 			    System.out.print("Select an action: ");
 			    
 			    adminChoice = sc.nextInt();
@@ -235,8 +236,16 @@ public class AdminiMenu {
 						AdminControl.printStudentListByCourse(courseCode5);
 						break;
 
-	                default:
-	                	StarsPlanner.main(null);; 
+					case 8: 
+					    System.out.println();
+						System.out.print("Enter matric number of the student: ");
+						int matric = sc.nextInt();
+						sc.nextLine(); // Consume newline character
+                        AdminControl.grantPermissionForOverloading(matric);
+						break; 
+
+					default:
+						StarsPlanner.main(null);
 		        } 
 			}
 		sc.close();

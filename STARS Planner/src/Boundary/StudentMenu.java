@@ -2,7 +2,6 @@ package Boundary;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.util.Calendar;
 import Control.CourseControl;
 import Control.StudentCourseControl;
@@ -73,7 +72,7 @@ public class StudentMenu {
 	                
 	            case 2:
 	            	System.out.println();
-	            	System.out.println("Enter Course Code");
+	            	System.out.print("Enter Course Code ");
 	            	String courseID2 = sc.nextLine();    
 	            	Course course2 = CourseControl.findCourse(courseID2);
 	                if(course2==null) {
@@ -90,6 +89,7 @@ public class StudentMenu {
 					} catch (Exception e) {
 						System.out.print("Error Encountered in Drop course");
 					}
+	                System.out.print("Successfully dropped course: " + course2.printName());
                 break;
 	                
 	            case 3: 
@@ -115,18 +115,27 @@ public class StudentMenu {
 	                break;
 	                
 	            case 5:
-	            	System.out.println("Enter Course Code: ");
+	            	System.out.print("Enter Course Code: ");
 	                String courseCode4 = sc.nextLine();
 	                Course course4=CourseControl.findCourse(courseCode4);
-	                ArrayList<IndexNumber> indexNumber2 =course4.getIndexes();
-	                for (IndexNumber indnum : indexNumber2)
-	                { 		      
-	                    System.out.println(indnum.getIndexNum()); 		
+	                if(course4==null) {
+	                	System.out.println("Course code not found");
+	                	break;
 	                }
-	                System.out.println("Enter index number to swap: ");
+	                
+	                if(StudentCourseControl.checkCourseRegistered(student, course4)) {
+	            		System.out.println("Course not registered.");
+	            		break;
+	            	} else {
+	            		System.out.println("Currently enrolled in index: " + student.findIndex(course4).getIndexNum());
+	            	}
+	                
+	                System.out.print("Following index groups were found: "); course4.printIndexes();
+	                System.out.print("Enter new index number to swap: ");
 	                int index2 = sc.nextInt();
 	                sc.nextLine(); // Consume newline character
-	                StudentCourseControl.changeIndexNumberOfCourse(student, courseCode4, index2);
+	                
+	                StudentCourseControl.changeIndexNumberOfCourse(student, course4, index2);
 	                break;
 	                
 	            case 6:

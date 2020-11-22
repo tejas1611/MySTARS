@@ -26,7 +26,7 @@ public class test {
 		DatabaseControl.writeSerializedObject("adminDB", list);
 		
 		Password passwordToStore1 = PasswordControl.generateHash("Asdfg123");
-		Student stud1 = new Student("tejas002", "Tejas G", "tejas@gmail.com", passwordToStore1, "Male", "Indian", 123, "SCSE", "CE", 2);
+		Student stud1 = new Student("tejas002", "Tejas G", "tejasgoel2001@gmail.com", passwordToStore1, "Male", "Indian", 123, "SCSE", "CE", 2);
 		Password passwordToStore2 = PasswordControl.generateHash("Sdfghj234");
 		Student stud2 = new Student("gavin123", "Gavin N", "gavin@gmail.com", passwordToStore2, "Male", "Singaporean", 234, "SCSE", "CE", 1);
 		Password passwordToStore3 = PasswordControl.generateHash("Dfghjk345");
@@ -51,7 +51,7 @@ public class test {
 		DatabaseControl.writeSerializedObject("studentDB", list1);
 		
 		
-		Course course = new Course("CE2002", "Object Oriented", "SCSE", "Core", 3);
+		Course course = new Course("CE2002", "Object Oriented Design & Programming", "SCSE", "Core", 3);
 		
 		IndexNumber ind = new IndexNumber(1039, "SEP1", 2);
 		Lesson lesson = new Lesson("TKL", new Time(10, 0, 0), new Time(12, 0, 0), LessonType.LEC, Day.TUESDAY, "all", "LT1A");
@@ -73,8 +73,31 @@ public class test {
 		course.addIndex(ind);
 		course.addIndex(ind2);
 		
+		Course course2 = new Course("CE2001", "Algorithms", "SCSE", "Core", 3);
+		
+		IndexNumber ind3 = new IndexNumber(2984, "SEP1", 2);
+		Lesson lesson5 = new Lesson("LYR", new Time(10, 0, 0), new Time(12, 0, 0), LessonType.LEC, Day.MONDAY, "all", "LT1A");
+		Lesson lesson6 = new Lesson("TH", new Time(12, 30, 0), new Time(2, 30, 0), LessonType.LAB, Day.THURSDAY, "even", "SPL");
+		try {
+			ind3.addLesson(lesson5);
+			ind3.addLesson(lesson6);
+		} catch (Exception e) {		}
+		
+		
+		IndexNumber ind4 = new IndexNumber(3652, "SE1", 3);
+		Lesson lesson7 = new Lesson("LYR", new Time(10, 0, 0), new Time(12, 0, 0), LessonType.LEC, Day.MONDAY, "all", "LT1A");
+		Lesson lesson8 = new Lesson("SR", new Time(12, 30, 0), new Time(2, 30, 0), LessonType.LAB, Day.THURSDAY, "odd", "SPL");
+		try {
+			ind4.addLesson(lesson7);
+			ind4.addLesson(lesson8);
+		} catch (Exception e) {}
+		
+		course2.addIndex(ind3);
+		course2.addIndex(ind4);
+		
 		List<Course> list2 = new ArrayList<Course>();
 		list2.add(course);
+		list2.add(course2);
 		DatabaseControl.writeSerializedObject("courseDB", list2);
 
 	}

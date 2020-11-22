@@ -46,7 +46,18 @@ public class Student extends Person {
 	public String getGender() { return gender; }
 	
 	public void addCourse(Course course, IndexNumber index) { courses.put(course, index); }
-	public void removeCourse(Course course)  { courses.remove(course); }
+	public void removeCourse(Course course)  { 
+		for(Course c : courses.keySet())
+			if(c.getCourseCode().equals(course.getCourseCode()))
+				courses.remove(c); 
+	}
+	
+	public IndexNumber findIndex(Course course) {
+		for(Course c : courses.keySet())
+			if(c.getCourseCode().equals(course.getCourseCode()) || c.getCourseName().equals(course.getCourseName()))
+				return courses.get(c);
+		return null;
+	}
 	
 	public void addWaitlist(Course course, IndexNumber index) { waitlist.put(course, index); }
 	public void removeWaitlist(Course course) { waitlist.remove(course); }
@@ -72,7 +83,6 @@ public class Student extends Person {
 	
 	public HashMap<Course, IndexNumber> getCourses() { return courses; }
 	
-	public IndexNumber getIndexofCourse(Course courseReq) { return courses.get(courseReq); }
 	public void setIndexofCourse(Course course, int index){
 		courses.get(course).setIndexNum(index);
 	}
