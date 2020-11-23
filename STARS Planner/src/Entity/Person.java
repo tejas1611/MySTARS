@@ -2,6 +2,9 @@ package Entity;
 
 import java.io.Serializable;
 
+/**
+ * Abstract class to describe the general variables, getters and setters for a person.
+ */
 public abstract class Person implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -12,6 +15,15 @@ public abstract class Person implements Serializable {
 	protected String gender;
 	protected String nationality;
 	
+	/**
+	 * Parameterized constructor to initialize person variables
+	 * @param id to store the username of person
+	 * @param name to store the name of the person
+	 * @param email to email the name of the person
+	 * @param password to password the name of the person
+	 * @param gender to gender the name of the person
+	 * @param nationality to nationality the name of the person
+	 */
 	Person(String id, String name, String email, Password password, String gender, String nationality) {
 		this.id = id;
 		this.name = name;
@@ -32,6 +44,9 @@ public abstract class Person implements Serializable {
 	public String getEmail() { return email; }
 	public void setEmail(String email) { this.email = email; }
 
+	/**
+	 * Function to print the username, name and email id of the person
+	 */
 	public void printInfo() {
 		System.out.println( id + " - " + name + ", Email:" + email);
 	}

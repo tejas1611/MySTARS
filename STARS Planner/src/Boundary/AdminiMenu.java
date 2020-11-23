@@ -11,8 +11,15 @@ import Entity.IndexNumber;
 import Entity.Password;
 import Control.AdminControl;
 
+/**
+ * Boundary class- User Interface for the Administrator
+ */
 public class AdminiMenu {
 	
+	/**
+	 * Function to access the admin's menu
+	 * @param admin Admin Object using the menu
+	 */
 	public static void AdmMenu(Admin admin) {
 			int adminChoice=0;
 			Scanner sc = new Scanner(System.in);
@@ -137,11 +144,7 @@ public class AdminiMenu {
 		                switch(updates) {
 		                	case 1: 
 		                		System.out.println();
-		                		ArrayList<IndexNumber> indexNum = course.getIndexes();
-				                System.out.print("Following index groups were found: ");
-				                for (IndexNumber num : indexNum) { 		      
-				                    System.out.print(num.getIndexNum() + " "); 		
-				                }
+				                System.out.print("Following index groups were found: "); course.printIndexes();
 				                System.out.print("\nEnter your required index number ");
 				                int indexNumber = sc.nextInt();
 				                sc.nextLine(); // Consume newline character
@@ -150,37 +153,33 @@ public class AdminiMenu {
 				                System.out.print("Enter the updated vacancy: ");
 				                int vacancy = sc.nextInt();
 				                sc.nextLine(); // Consume newline character
-								AdminControl.updateCourseVacancy(courseCode2, indexNumber, vacancy);
+								AdminControl.updateCourseVacancy(course, indexNumber, vacancy);
 								break;
 
 		                	case 2: 
 		                		System.out.println();
-		                		ArrayList<IndexNumber> indexNum2 = course.getIndexes();
-				                System.out.print("Following index groups were found: ");
-				                for (IndexNumber num : indexNum2) { 		      
-				                    System.out.print(num.getIndexNum() + " "); 		
-				                }
+				                System.out.print("Following index groups were found: "); course.printIndexes();
 				                System.out.print("\nEnter index number to modify: ");
 				                int indexNumber2 = sc.nextInt();
 				                sc.nextLine(); // Consume newline character
 				                System.out.print("\nEnter new index number: ");
 				                int newIndex = sc.nextInt();
 				                sc.nextLine(); // Consume newline character
-		                        AdminControl.updateCourseIndex(courseCode2, indexNumber2, newIndex);
+		                        AdminControl.updateCourseIndex(course, indexNumber2, newIndex);
 		                        break;
 
 		                	case 3:
 		                		System.out.println();
 		                        System.out.print("Enter new course code");
 		                        String newCourseCode= sc.nextLine();
-		                        AdminControl.updateCourseCode(courseCode2, newCourseCode);
+		                        AdminControl.updateCourseCode(course, newCourseCode);
 		                        break;
 
 		                	case 4: 
 		                		System.out.println();
 		                		System.out.print("Enter School of Course");
 		                		String newSchool = sc.nextLine();
-		                		AdminControl.updateSchool(courseCode2, newSchool);
+		                		AdminControl.updateSchool(course, newSchool);
 		                		break;
 		                }
 		                break;

@@ -2,6 +2,7 @@ package Control;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import Entity.Course;
@@ -9,10 +10,22 @@ import Entity.IndexNumber;
 import Entity.Lesson;
 import Entity.Student;
 
+/**
+ * Controller class to manage function related to courses for a student.
+ * Functions: addCourse, dropCourse, printCourseRegistered, changeIndexNumberOfCourse
+ *            swapIndexNumberWithPeers, checkCourseRegistered, timeClashBetweenModules
+ */
 public class StudentCourseControl {
 	
+    /**
+     * Function for student to register a course
+     * @param student Student object to register
+     * @param course Course to be registered
+     * @param index Index in course to be registered
+     * @throws Exception Overload exception, Email Exception
+     */
     public static void addCourse(Student student, Course course, int index) throws Exception {
-    	boolean valid = false;
+    	boolean valid = true;
     	
     	// Check AU limit for student
     	int totalAU = student.getTotalAU();
@@ -22,16 +35,13 @@ public class StudentCourseControl {
 		}
 		
 		// Check for invalid Index Number
-		int i;
+		int i = CourseControl.checkCourseIndex(course, index);
 		ArrayList<IndexNumber> indices = course.getIndexes();
-		for(i=0;i<indices.size();i++) {
-			if(indices.get(i).getIndexNum() == index) {
-				valid = true;
-				break;
-			}
-		}
-		if(!valid) {
+		
+		if(i==-1) {
+			valid=false;
 			System.out.println("Index Number not found in course");
+			return;
 		}
 		
 		// Check for timetable clash
@@ -51,7 +61,7 @@ public class StudentCourseControl {
 			indices.set(i, i_temp);
 			System.out.println("Course successfully registered");
 			try {
-				System.out.println("Sending Confirmation...");
+				System.out.print("\nSending Confirmation...");
 				SendMailTLS.sendMail(student.getEmail(), student, course, 0);
 			} catch (Exception e) {
 				System.out.print("Unable to send an E-mail. : " + e);
@@ -76,7 +86,13 @@ public class StudentCourseControl {
 		DatabaseControl.updateInFile(student);
 		return;
     }
-
+    
+    /**
+     * Function for student to drop a course
+     * @param student Student object to drop a course
+     * @param course Course to be drop
+     * @throws Exception
+     */
     public static void dropCourse(Student student, Course course) throws Exception {
     	// Remove student from course
     	IndexNumber index = student.findIndex(course);
@@ -103,13 +119,27 @@ public class StudentCourseControl {
 		
 		// Check for Waitlist
 		try { 
-			Student studentToReg = index.findNextInWaitlist();
+			Student studentToReg = null;
+			int studentMatric = index.findNextInWaitlist();
+			@SuppressWarnings("unchecked")
+			List<Student> studentDB = DatabaseControl.readSerializedObject("studentDB");
+			for(Student s : studentDB) {
+	    		if(s.getMatricNo()==studentMatric) {
+	    			studentToReg=s;
+	    			break;
+	    		}
+	    	}
 			addCourse(studentToReg, course, index.getIndexNum());
 		} catch (NoSuchElementException e) {
 			System.out.print("");
 		}
     }
     
+	/**
+     * Function to print all the registered courses for a student
+     * @param student Student object for which courses are to be printed
+     * @return coursesString
+     */
     public static String printCourseRegistered(Student student){
     	String coursesString = "";
     	for(Course c: student.getCourses().keySet()) {
@@ -119,11 +149,20 @@ public class StudentCourseControl {
 		}
     	if(coursesString.equals(""))
     		System.out.println("\n\nNo courses have been registered.");
-    	else 
+    	else {
     		System.out.println("\n\nCourses Registered:\n" + coursesString);
+    		System.out.println("\nTotal AU: " + student.getTotalAU());
+    	}
 		return coursesString;
     }
     
+	/**
+     * Function to change index number of course
+     * @param student Student object for which index number is to be changed
+     * @param course Course whose index number is to be changed
+     * @param newIndex new index number to be used
+     * @throws Exception Error in adding or dropping course
+     */
     public static void changeIndexNumberOfCourse(Student student, Course course, int newIndex) {
         for(IndexNumber i : course.getIndexes()) {
     		if (i.getIndexNum() == newIndex ) {
@@ -144,6 +183,14 @@ public class StudentCourseControl {
         }
 	}
     
+    /**
+     * Function to swap index number of course with peer
+     * @param student Student object to swap index number of course with
+     * @param peer Student object to swap index number of course with
+     * @param courseCode the course code of the course to swap index 
+     * @param studentIndex current index number of the Student object
+     * @param peerIndex current index number of the peer Student object
+     */
     public static void swapIndexNumberWithPeers(Student student, Student peer, String courseCode, int studentIndex, int peerIndex){
 		Boolean studentValid = false;
 		Boolean peerValid = false;
@@ -187,6 +234,14 @@ public class StudentCourseControl {
     	return true;
     }
     
+    
+    /**
+     * Function to check for timetable clash for a student
+     * @param student Student object to register a course
+     * @param courseToReg Course to be registered
+     * @param indexToReg Index in course to be registered
+     * @return True if there is clash, False otherwise
+     */
     public static Boolean timeClashBetweenModules(Student student, Course courseToReg, IndexNumber indexToReg) {
 		Boolean clash = false;
     	HashMap<Course, IndexNumber> courses = student.getCourses();
@@ -204,10 +259,10 @@ public class StudentCourseControl {
 					if(commonDay && commonWeek) {
 						if(lessonToReg.getStartTime().compareTo(lessonRegistered.getStartTime()) == 0) clash = true;
 						if(lessonToReg.getEndTime().compareTo(lessonRegistered.getEndTime()) == 0) clash= true;
-						if(lessonToReg.getStartTime().compareTo(lessonRegistered.getEndTime()) < 0 && 
-								lessonToReg.getStartTime().compareTo(lessonRegistered.getStartTime()) > 0) clash = true;
-						if(lessonToReg.getEndTime().compareTo(lessonRegistered.getStartTime()) > 0 &&
-								lessonToReg.getEndTime().compareTo(lessonRegistered.getEndTime()) < 0 ) clash = true;
+						if(lessonToReg.getStartTime().before(lessonRegistered.getEndTime()) && 
+								lessonToReg.getStartTime().after(lessonRegistered.getStartTime())) clash = true;
+						if(lessonToReg.getEndTime().after(lessonRegistered.getStartTime()) &&
+								lessonToReg.getEndTime().before(lessonRegistered.getEndTime())) clash = true;
 						if(clash) {
 							courseClashing = courseRegistered;
 							lessonClashing = lessonRegistered;

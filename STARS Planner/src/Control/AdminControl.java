@@ -7,8 +7,27 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 
+/**
+ * Controller class to manage functions related for an administrator.
+ * Functions: editStudentAccessPeriod, addStudent, addCourse, updateCourseVacancy, 
+ * 			  updateCourseIndex, updateCourseCode, updateSchool, addCourseIndex,
+ * 			  printStudentListByIndexNumber, printStudentListByCourse, grantPermissionForOverloading
+ */
 @SuppressWarnings("resource")
 public class AdminControl {
+	/**
+	 * Function to edit the students' access period
+	 * @param startYear start year of the access period
+	 * @param startMonth start month of the access period
+	 * @param startDay start day of the access period
+	 * @param startHours start hours of the access period
+	 * @param startMin start minutes of the access period
+	 * @param endYear end year of the access period
+	 * @param endMonth end month of the access period
+	 * @param endDay end day of the access period
+	 * @param endHours end hours of the access period
+	 * @param endMin end minutes of the access period
+	 */
 	public static void editStudentAccessPeriod(int startYear, int startMonth, int startDay, int startHours, int startMin,
 												int endYear, int endMonth, int endDay, int endHours, int endMin) {
 	   	Student.setAccessStart(new GregorianCalendar(startYear, startMonth-1, startDay, startHours, startMin));
@@ -19,6 +38,19 @@ public class AdminControl {
     	new Scanner(System.in).nextLine();
 	}
 	
+    /**
+     * Function to add Student object into database
+     * @param id ID of the student
+     * @param studentName name of the student
+     * @param email email of the student
+     * @param password Password class of the student
+     * @param gender gender of the student
+     * @param nationality nationality of the student
+     * @param matricNo Matric number of the student
+     * @param school School the student is enrolled to
+     * @param program Program of the student enrolled to
+     * @param yearOfStudy the study year the student currently at
+     */
     public static void addStudent(String id, String studentName, String email, Password password, String gender, String nationality,
 			int matricNo, String school, String program, int yearOfStudy) {
         Student newStudent = new Student(id, studentName, email, password, gender, nationality, matricNo, school, program, yearOfStudy);
@@ -48,6 +80,14 @@ public class AdminControl {
     	new Scanner(System.in).nextLine();
     }
     
+    /**
+     * Function to add a course object into database
+     * @param courseCode course code of the course
+     * @param courseName name of the course
+     * @param school school which the course is available at
+     * @param courseType type of course the student can applied as
+     * @param au AU of the course
+     */
     @SuppressWarnings("unchecked")
     public static void addCourse(String courseCode, String courseName, String school, String courseType, int au) {
     	Course newCourse = new Course(courseCode, courseName, school, courseType, au);
@@ -74,102 +114,83 @@ public class AdminControl {
     	new Scanner(System.in).nextLine();
     }
        
-    public static boolean checkCourseIndex(String courseCode, int indexNumber) {
-    	Course course = CourseControl.findCourse(courseCode);
-		if (course == null) {
-			System.out.println("Error: Course not found");
-			return false;
-		}
-        for (IndexNumber i: course.getIndexes()){
-            if (i.getIndexNum()==indexNumber) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
+    /**
+     * Function to update the vacancy of course
+     * @param course Course object to update vacany at
+     * @param indexNumber index number of course to update vacany
+     * @param vacancy vacancy to update into
+     */
     @SuppressWarnings("unchecked")
-	public static void updateCourseVacancy(String courseCode, int indexNumber, int vacancy) {
-    	// TODO update course vacancy
-        int waitlistLength=0;
-		int availableSpots=0;
-		Course oldCourse = CourseControl.findCourse(courseCode);
-		if (oldCourse == null) {
-			System.out.println("Error: Course not found");
-            return;
-		}
-		Course newCourse= new Course(oldCourse);
-        if(!checkCourseIndex(courseCode, indexNumber)){
+	public static void updateCourseVacancy(Course course, int indexNumber, int vacancy) {		
+        if(CourseControl.checkCourseIndex(course, indexNumber)==-1) {
 			System.out.println("This index number does not exist!");
 			return;
         }
-		for(IndexNumber i:newCourse.getIndexes()) {
-			if(i.getIndexNum()==indexNumber) {
-				i.setVacancy(vacancy);
-
-				availableSpots=vacancy-(i.getVacancy());
-				waitlistLength=i.getWaitlistLength();
-
-				while(availableSpots!=0 && waitlistLength!=0){
-
-					Student student =null;
-					try {
-						student = i.findNextInWaitlist();
-					} catch (Exception e) {
-						System.out.println("No students on waitlist.");
-					}
-					student.removeWaitlist(newCourse);
-					try {
-						System.out.println("Sending Confirmation...");
-						SendMailTLS.sendMail(student.getEmail(), student, newCourse, 1);
-					} catch (Exception e) {
-						System.out.print("Unable to send an E-mail.");
-					}
-					try {
-						i.addStudent(student);
-					} catch (Exception e) {
-						System.out.print("Error Encountered");
-					}
-					availableSpots-=1;
-					waitlistLength-=1;
-				}
-			}
-		}
-
-		List<Course> courseDB = (List<Course>) DatabaseControl.readSerializedObject("courseDB");
-		for(int index=0; index<courseDB.size(); index++) {
-			Course c = courseDB.get(index);
-			if(c.equals(oldCourse)) {
-				courseDB.remove(index);
-				courseDB.add(index, newCourse);
-				break;
-			}
+        
+        // Search correct index and update inside newCourse object
+        ArrayList<IndexNumber> indexNumbers = course.getIndexes();
+        IndexNumber indexChanged = null;
+        int i;
+        for(i=0; i<indexNumbers.size(); i++) {
+        	indexChanged = indexNumbers.get(i);
+        	if(indexChanged.getIndexNum() == indexNumber) {
+        		indexChanged.setVacancy(vacancy);
+        		break;
+        	}
         }
-		
-		// Update students and database
-    	List<Student> studentsInCourse = CourseControl.getStudents(newCourse);
-    	List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
-    	for(int index=0; index<studentDB.size(); index++) {
-    		Student s = studentDB.get(index);
-    		if(studentsInCourse.contains(s)) {
-	    		s.addCourse(newCourse, s.findIndex(oldCourse));
-	    		s.removeCourse(oldCourse);
-	    		studentDB.set(index, s);
-    		}
-    	}
+        
+        // Check if students can be moved from waitlist
+		int availableSpots = vacancy-(indexChanged.getVacancy());
+		int waitlistLength = indexChanged.getWaitlistLength();
+
+		while(availableSpots>0 && waitlistLength>0) {
+			Student student = null;
+			try {
+				int studentMatric = indexChanged.findNextInWaitlist();
+				List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
+				for(Student s : studentDB) {
+		    		if(s.getMatricNo()==studentMatric) {
+		    			student=s;
+		    			break;
+		    		}
+		    	}
+			} catch (Exception e) {
+				System.out.println("No students on waitlist.");
+				return;
+			}
+			
+			student.removeWaitlist(course, indexChanged);
+			DatabaseControl.updateInFile(student);
+			indexChanged.addStudent(student);
+			
+			try {
+				System.out.print("\nSending Confirmation...");
+				SendMailTLS.sendMail(student.getEmail(), student, course, 1);
+			} catch (Exception e) {
+				System.out.print("Unable to send an E-mail.");
+			}
+			
+			availableSpots-=1;
+			waitlistLength-=1;
+		}
     	
-    	DatabaseControl.writeSerializedObject("courseDB", courseDB);
-    	DatabaseControl.writeSerializedObject("studentDB", studentDB);
+    	indexNumbers.set(i, indexChanged);
+        course.setIndexes(indexNumbers);
+        DatabaseControl.updateInFile(course);
+        System.out.println("\nCourse: " + course.printName() + " Index: " + indexChanged.getIndexNum() + 
+        		" vacancy changed to " + vacancy);
     }
     
+    /**
+     * Function to update course index
+     * @param course Course object to update a certain index number
+     * @param indexNumber current index number of the course
+     * @param newIndex new index number of the course
+     */
     @SuppressWarnings("unchecked")
-	public static void updateCourseIndex(String courseCode, int indexNumber, int newIndex) {
-        Course course = CourseControl.findCourse(courseCode);
-		if (course == null) {
-			System.out.println("Error: Course not found");
-            return;
-		}
-        if(!checkCourseIndex(courseCode, indexNumber)){
+	public static void updateCourseIndex(Course course, int indexNumber, int newIndex) {
+        
+        if(CourseControl.checkCourseIndex(course, indexNumber)==-1) {
 			System.out.println("This index number does not exist!");
 			return;
 		}
@@ -201,15 +222,16 @@ public class AdminControl {
     		}
     	}
     	DatabaseControl.writeSerializedObject("studentDB", studentDB);
+    	System.out.println("\nCourse: " + course.printName() + " Index: " + indexNumber + " changed to " + newIndex);
     }
 
+    /**
+     * Function to update course code
+     * @param oldCourse Course object of old course
+     * @param newCourseCode new course code to update to
+     */
     @SuppressWarnings("unchecked")
-	public static void updateCourseCode(String courseCode, String newCourseCode) {
-        Course oldCourse = CourseControl.findCourse(courseCode);
-		if (oldCourse == null) {
-			System.out.println("Error: Course not found");
-            return;
-		}
+	public static void updateCourseCode(Course oldCourse, String newCourseCode) {
         Course newCourse = new Course(oldCourse);
 		newCourse.setCourseCode(newCourseCode);
         
@@ -238,16 +260,17 @@ public class AdminControl {
     	
     	DatabaseControl.writeSerializedObject("courseDB", courseDB);
     	DatabaseControl.writeSerializedObject("studentDB", studentDB);
+    	System.out.println("\nCourse code changed to: " + newCourse.printName());
     }
 
+    /**
+     * Function to update the school which the course is available at
+     * @param course Course object to update school
+     * @param setSchool set the new school for the course
+     */
     @SuppressWarnings("unchecked")
-	public static void updateSchool(String courseCode, String setSchool) {
-        Course course = CourseControl.findCourse(courseCode);
-		if (course == null) {
-			System.out.println("Error: Course not found");
-            return;
-		}
-		course.setSchool(setSchool);
+	public static void updateSchool(Course course, String setSchool) {
+        course.setSchool(setSchool);
 
 		// Update in course database
 		DatabaseControl.updateInFile(course);
@@ -266,8 +289,16 @@ public class AdminControl {
     	}
     	
     	DatabaseControl.writeSerializedObject("studentDB", studentDB);
+    	System.out.println("\nCourse: " + course.printName() + " school changed to " + course.getSchool());
     }
 
+    /**
+     * Function to add index into course
+     * @param courseCode course code of course to add index into
+     * @param indexNumber index number to add into
+     * @param tutorialGroup name of tutorial group for the index
+     * @param capacity the capacity of students the index is able to hold
+     */
     @SuppressWarnings("unchecked")
 	public static void addCourseIndex(String courseCode, int indexNumber, String tutorialGroup, int capacity) {
         Course oldCourse = CourseControl.findCourse(courseCode);
@@ -276,7 +307,7 @@ public class AdminControl {
             return;
 		}
 		Course newCourse = new Course(oldCourse);
-        if(checkCourseIndex(courseCode, indexNumber)){
+        if(CourseControl.checkCourseIndex(oldCourse, indexNumber)!=-1){
 			System.out.println("Index already exists!");
 			return;
 		}
@@ -298,6 +329,11 @@ public class AdminControl {
     }
 
     
+    /**
+     * Function to print the list of students by index number
+     * @param courseCode the course code of course to print the liststudents
+     * @param IndexNumber index number of course to print the list of students
+     */
     public static void printStudentListByIndexNumber(String courseCode, int IndexNumber)
      {
     	Course course = CourseControl.findCourse(courseCode);
@@ -332,6 +368,10 @@ public class AdminControl {
         System.out.println("Number of students in this index group: " + students.size());
     }
     
+    /**
+     * Function to print the student list by course
+     * @param courseCode course code of the course to print the list of
+     */
     public static void printStudentListByCourse(String courseCode)
     {
     	Course course = CourseControl.findCourse(courseCode);
@@ -362,6 +402,10 @@ public class AdminControl {
         System.out.println("Number of students in this course: " + students.size());
     }
     
+    /**
+     * Function to grant permission for overloading for a student
+     * @param matricNumber matric number of student to grant permission to
+     */
     @SuppressWarnings("unchecked")
 	public static void grantPermissionForOverloading(int matricNumber) {
     	boolean flag = false;

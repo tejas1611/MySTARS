@@ -11,13 +11,17 @@ import Entity.*;
 
 import java.util.ArrayList;
 
-// add import java.io.Serializable;
-//add 'implements Serializable' after any class whose object is to be written into the file
-
-// Note : When structure of the Object type (the class file) in the list changed
-// the Serialized file may fail.
+/**
+ * Controller class to manage reading, writing and updates to database.
+ */
+@SuppressWarnings({"rawtypes","unchecked"})
 public class DatabaseControl
 {
+	/**
+	 * Function to read serialized object from file
+	 * @param filename filename to read serialized object from
+	 * @return list of the objects
+	 */
 	public static List readSerializedObject(String filename) {
 		List objectList = null;
 		FileInputStream fis = null;
@@ -36,6 +40,11 @@ public class DatabaseControl
 		return objectList;
 	}
 
+	/**
+	 * Function to write serialized object into file
+	 * @param filename name of file to write serialized object into
+	 * @param list list of objects to write into
+	 */
 	public static void writeSerializedObject(String filename, List list) {
 		FileOutputStream fos = null;
 		ObjectOutputStream out = null;
@@ -49,6 +58,10 @@ public class DatabaseControl
 		}
 	}
 	
+	/**
+	 * Function to update an existing object in the database
+	 * @param o Object to be updated
+	 */
 	public static void updateInFile(Object o) {
 		if(o instanceof Student) {
 			List<Student> studList = (List<Student>) readSerializedObject("studentDB");

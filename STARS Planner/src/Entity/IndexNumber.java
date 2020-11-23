@@ -5,26 +5,39 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Entity class to describe the variables, getters and setters for the index number.
+ */
 public class IndexNumber implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int indexNum;
 	private String tutorialGroup;
 	private int vacancy;
-	Queue<Student> waitlist;
+	Queue<Integer> waitlist;
 	private ArrayList<Integer> students;
 	private ArrayList<Lesson> lessons;
 	
 	
+	/**
+	 * Parameterized contructor to initialize index number variables
+	 * @param indexNum to store the index number
+	 * @param tutorialGroup to store the tutorial group for the index number
+	 * @param capacity to store the capacity of student intake for the index number
+	 */
 	public IndexNumber(int indexNum, String tutorialGroup, int capacity) {
 		this.indexNum = indexNum;
 		this.tutorialGroup = tutorialGroup;
 		this.vacancy = capacity;
 		this.students = new ArrayList<Integer>();
 		this.lessons = new ArrayList<Lesson>();
-		this.waitlist = new LinkedList<Student>();
+		this.waitlist = new LinkedList<Integer>();
 	}
 	
+	/**
+	 * Copy constructor for IndexNumber
+	 * @param another Object of IndexNumber to copy
+	 */
 	public IndexNumber(IndexNumber another) {
 		this.indexNum = another.indexNum;
 		this.tutorialGroup = another.tutorialGroup;
@@ -37,6 +50,9 @@ public class IndexNumber implements Serializable {
     public int getIndexNum() { return indexNum; }
 	public void setIndexNum(int indexNum) { this.indexNum=indexNum; }
 
+	/**
+	 * Function to print the time table- lesson type, venue, week and day
+	 */
 	public void printTimeTable(){
 		for(Lesson l:lessons){
 			LessonType lessonType = l.getLessonType();
@@ -54,7 +70,11 @@ public class IndexNumber implements Serializable {
 	public void setVacancy(int vacancy) { this.vacancy= vacancy; }
 	
 
-	public void addStudent(Student student) throws Exception {
+	/**
+	 * Function to add a student to an index number
+	 * @param student Student object to be added to the index number
+	 */
+	public void addStudent(Student student) {
 		students.add(Integer.valueOf(student.getMatricNo()));
 		vacancy--;
 	}
@@ -62,6 +82,11 @@ public class IndexNumber implements Serializable {
 	
 	public ArrayList<Integer> getStudents() { return students; }
 
+	/**
+	 * Function to add a lesson to an index number
+	 * @param lesson Lesson object to be added to the index number
+	 * @throws Exception if the lesson already exists in the index number
+	 */
 	public void addLesson(Lesson lesson) throws Exception {
 		if(lessons.contains(lesson))
 			throw new Exception("Lesson already exists in this index number " + lesson.getLessonType());
@@ -79,13 +104,11 @@ public class IndexNumber implements Serializable {
 	public ArrayList<Lesson> getLessons() { return lessons; }
 	
 	public void putInWaitlist(Student student) {
-		waitlist.add(student);
+		waitlist.add(student.getMatricNo());
 	}
-	public Student findNextInWaitlist() throws Exception {
+	public Integer findNextInWaitlist() throws Exception {
 		return waitlist.remove();
 	}
 
-	public int getWaitlistLength(){
-		return waitlist.size();
-	}
+	public int getWaitlistLength() { return waitlist.size(); }
 }

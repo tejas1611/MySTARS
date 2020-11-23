@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+/**
+ * Entity class to describe all the student parameters, getters and setters.
+ */
 public class Student extends Person {
 
 	private static final long serialVersionUID = 1L;
@@ -29,9 +32,21 @@ public class Student extends Person {
 			AULimit = 22;
 	}
 	
+	/**
+	 * Parameterized constructor to initialize student variables
+	 * @param id to store student username
+	 * @param name to store student name
+	 * @param email to store student email
+	 * @param password to store student password
+	 * @param gender to store student gender
+	 * @param nationality to store student nationality
+	 * @param matricNo to store student matric number
+	 * @param school to store school of the student
+	 * @param program to store program of study of the student
+	 * @param yearOfStudy to store the year of study of the student
+	 */
 	public Student(String id, String name, String email, Password password, String gender, String nationality,
 			int matricNo, String school, String program, int yearOfStudy) {
-		
 		super(id, name, email, password, gender, nationality);
 		this.matricNo = matricNo;
 		this.school = school;
@@ -52,6 +67,11 @@ public class Student extends Person {
 				courses.remove(c); 
 	}
 	
+	/**
+	 * Function to find the index for a course
+	 * @param course Course object for which the index number is to be found
+	 * @return IndexNumber object for the Course object entered
+	 */
 	public IndexNumber findIndex(Course course) {
 		for(Course c : courses.keySet())
 			if(c.getCourseCode().equals(course.getCourseCode()) || c.getCourseName().equals(course.getCourseName()))
@@ -60,7 +80,13 @@ public class Student extends Person {
 	}
 	
 	public void addWaitlist(Course course, IndexNumber index) { waitlist.put(course, index); }
-	public void removeWaitlist(Course course) { waitlist.remove(course); }
+	public void removeWaitlist(Course course, IndexNumber index) { 
+		for(Course c : waitlist.keySet())
+			if(c.getCourseCode().equals(course.getCourseCode())) {
+				waitlist.remove(course);
+				courses.put(course, index);
+			}
+		}
 	
 	@Override
 	public boolean equals(Object o) {
@@ -70,6 +96,10 @@ public class Student extends Person {
 			return false;
 	}
 	
+	/**
+	 * Function to get the total AU's registered for the student
+	 * @return total AU's registered
+	 */
 	public int getTotalAU() {
 		int totalAU = 0;
 		for(Course c : this.courses.keySet())
@@ -83,6 +113,11 @@ public class Student extends Person {
 	
 	public HashMap<Course, IndexNumber> getCourses() { return courses; }
 	
+	/**
+	 * Function to set the index number for a course
+	 * @param course Course object for which the index number is to be set
+	 * @param index index number to be used
+	 */
 	public void setIndexofCourse(Course course, int index){
 		courses.get(course).setIndexNum(index);
 	}
@@ -98,6 +133,10 @@ public class Student extends Person {
 	
 	public static Calendar getAccessStart() { return accessStart; }
 	public static void setAccessStart(Calendar accessStart) { Student.accessStart = accessStart; }
+	/**
+	 * Function to print the start of the access period for student to register courses
+	 * @return the start of access time
+	 */
 	public static String printaccessStart() {
 		String year = String.valueOf(accessStart.get(Calendar.YEAR));
 		String month = String.valueOf(accessStart.get(Calendar.MONTH)+1);
@@ -109,6 +148,10 @@ public class Student extends Person {
 
 	public static Calendar getAccessEnd() {	return accessEnd; }
 	public static void setAccessEnd(Calendar accessEnd) { Student.accessEnd = accessEnd; }
+	/**
+	 * Function to print the end of the access period for student to register courses
+	 * @return the end of access time
+	 */
 	public static String printaccessEnd() { 
 		String year = String.valueOf(accessEnd.get(Calendar.YEAR));
 		String month = String.valueOf(accessEnd.get(Calendar.MONTH)+1);

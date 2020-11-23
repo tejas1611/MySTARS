@@ -3,6 +3,9 @@ package Entity;
 import java.io.Serializable;
 import java.sql.Time;
 
+/**
+ * Entity class to describe the variables, getters and setters for the lesson.
+ */
 @SuppressWarnings("deprecation")
 public class Lesson implements Serializable {
 
@@ -16,6 +19,16 @@ public class Lesson implements Serializable {
 	private String venue;
 	private String teacher;
 	
+	/**
+	 * Parameterized constructor to initialise lesson variables
+	 * @param teacher to store the name of the teacher for the lesson
+	 * @param startTime to store the start time of the lesson
+	 * @param endTime to store the start time of the lesson
+	 * @param lessonType to store the type of lesson
+	 * @param day to store the day of the lesson
+	 * @param week to store the week of the lesson
+	 * @param venue to store the venue of the lesson
+	 */
 	public Lesson(String teacher, Time startTime, Time endTime, LessonType lessonType, 
 			Day day, String week, String venue) {
 		this.startTime = startTime;
@@ -41,12 +54,20 @@ public class Lesson implements Serializable {
 
 	public Time getStartTime() { return startTime; }
 	public void setStartTime(Time startTime) { this.startTime= startTime; }
+	/**
+	 * Function to print the start time of the lesson
+	 * @return start time of lesson formatted as String
+	 */
 	public String printStartTime() { 
 		return String.valueOf(startTime.getHours()) + ":" + String.valueOf(startTime.getMinutes()); 
 	}
 
 	public Time getEndTime() { return endTime; }
 	public void setEndTime(Time endTime) { this.endTime= endTime; }
+	/**
+	 * Function to print the end time of the lesson
+	 * @return end time of lesson formatted as String
+	 */
 	public String printEndTime() { 
 		return String.valueOf(endTime.getHours()) + ":" + String.valueOf(endTime.getMinutes()); 
 	}

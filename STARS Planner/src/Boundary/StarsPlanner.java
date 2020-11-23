@@ -2,9 +2,15 @@ package Boundary;
 
 import java.util.Scanner;
 import Entity.*;;
-
+/**
+ * Boundary class- User Interface integration class.
+ */
 public class StarsPlanner {
 	    
+    /**
+     * Main function. Program execution begins here.
+     * @param args
+     */
     public static void main(String args[]) {
     	clearScreen();
         int domain=0, loginAgain=0;
@@ -13,12 +19,17 @@ public class StarsPlanner {
         while(loginAgain==0) {
 	        System.out.println("\n\n============ Welcome To STARS Planner ===========");
 	        System.out.println("===================== LOG IN ====================");
-	        System.out.println("CHOOSE DOMAIN:");
+	        System.out.println("\nCHOOSE DOMAIN:");
 	        System.out.println("1. STUDENT");
 	        System.out.println("2. ADMIN");
+	        System.out.println("0. EXIT");
 	        System.out.print("ENTER YOUR CHOICE: ");
 	        domain = sc.nextInt();
 	        sc.nextLine(); // Consume newline character
+        	if(domain==0) {
+        		System.out.println("\n\nGoodbye!");
+        		System.exit(0);
+        	}
 	        loginAgain = LoginMenu.userLogin(domain);
 	        System.out.println("=================================================");
         }
@@ -38,6 +49,9 @@ public class StarsPlanner {
         sc.close();
     }
     
+    /**
+     * Function to clear console screen
+     */
     public static void clearScreen() {  
     	java.io.Console c = System.console();
 		if(c==null) return;

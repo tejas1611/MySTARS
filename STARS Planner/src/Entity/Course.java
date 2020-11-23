@@ -3,6 +3,10 @@ package Entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * @author tejas
+ * Entity class to describe the variables, getters and setters for the course.
+ */
 public class Course implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -14,6 +18,14 @@ public class Course implements Serializable {
 	private int au;
 	private ArrayList<IndexNumber> indexes ;
 	
+	/**
+	 * Parameterized constructor to initialize course variables
+	 * @param courseCode to store the course code for the course
+	 * @param courseName to store the course name for the course
+	 * @param school to store the school of the course
+	 * @param courseType to store the course type (UE, GERPE, CORE) for the course
+	 * @param au to store the AUs for the course
+	 */
 	public Course(String courseCode, String courseName, String school, String courseType, int au) {
 		this.courseCode=courseCode;
 		this.courseName=courseName;
@@ -24,6 +36,10 @@ public class Course implements Serializable {
 		this.indexes = new ArrayList<IndexNumber>();
 	}
 	
+	/**
+	 * Copy constructor for Course
+	 * @param another Object of Course to copy
+	 */
 	public Course(Course another) {
 		this.au = another.au;
 		this.courseCode = another.courseCode;
@@ -33,8 +49,16 @@ public class Course implements Serializable {
 		this.school = another.school;
 	}
 	
+	/**
+	 * Function to print the course code and course name
+	 * @return
+	 */
 	public String printName() { return (courseCode + ": " + courseName); }
 	
+	/**
+	 * Function to get an integer array list for all the students in the course (for all indexes)
+	 * @return the array list for all the students in the course
+	 */
 	public ArrayList<Integer> getStudents() {
 		ArrayList<Integer> studentID = new ArrayList<Integer>();
     	for(IndexNumber i : indexes) {
@@ -50,6 +74,9 @@ public class Course implements Serializable {
 	public void addIndex (IndexNumber ind) { indexes.add(ind); }
 	public ArrayList<IndexNumber> getIndexes() { return indexes; }
 	public void setIndexes(ArrayList<IndexNumber> indexes) { this.indexes = indexes; }
+	/**
+	 * Function to print all the index numbers in the course
+	 */
 	public void printIndexes() {
 		for (IndexNumber num : indexes) { 		      
             System.out.print(num.getIndexNum() + " "); 		
@@ -69,8 +96,11 @@ public class Course implements Serializable {
 	
 	public int getAU(){ return au; }
 	
+	/**
+	 * Function to print the information of the course- course code, name, type and AUs
+	 */
 	public void printInfo() {
-		System.out.println(courseCode + ": " + courseName + " - " + courseType + ", AU=" + au);
+		System.out.println(printName() + " - " + courseType + ", AU=" + au);
 	}
 	
 	@Override

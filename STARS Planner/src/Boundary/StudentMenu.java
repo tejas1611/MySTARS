@@ -9,8 +9,14 @@ import Control.PasswordControl;
 import Control.DatabaseControl;
 import Entity.*;
 
+/**
+ * Boundary class- User Interface for the Student
+ */
 public class StudentMenu {
 	
+	/**
+	 * Function to access student's menu
+	 */
 	public static void stdMenu()  {
         Calendar startDate = Student.getAccessStart();
         Calendar endDate = Student.getAccessEnd();
@@ -37,6 +43,7 @@ public class StudentMenu {
 			System.out.println("(6): Swap Index Number with Another Student");
 			System.out.println("(7): Exit");
 			System.out.print("Select an action: ");
+			@SuppressWarnings("resource")
 			Scanner sc = new Scanner(System.in);
 			studentChoice = sc.nextInt();
 			sc.nextLine(); // Consume newline character

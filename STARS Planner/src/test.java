@@ -2,7 +2,6 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
-import Control.CourseControl;
 import Control.DatabaseControl;
 import Control.PasswordControl;
 import Entity.Admin;
@@ -55,7 +54,7 @@ public class test {
 		
 		IndexNumber ind = new IndexNumber(1039, "SEP1", 2);
 		Lesson lesson = new Lesson("TKL", new Time(10, 0, 0), new Time(12, 0, 0), LessonType.LEC, Day.TUESDAY, "all", "LT1A");
-		Lesson lesson2 = new Lesson("TH", new Time(12, 30, 0), new Time(2, 30, 0), LessonType.LAB, Day.THURSDAY, "even", "SPL");
+		Lesson lesson2 = new Lesson("TH", new Time(12, 30, 0), new Time(14, 30, 0), LessonType.LAB, Day.THURSDAY, "even", "SPL");
 		try {
 			ind.addLesson(lesson);
 			ind.addLesson(lesson2);
@@ -64,7 +63,7 @@ public class test {
 		
 		IndexNumber ind2 = new IndexNumber(1025, "SE2", 3);
 		Lesson lesson3 = new Lesson("TKL", new Time(10, 0, 0), new Time(12, 0, 0), LessonType.LEC, Day.TUESDAY, "all", "LT1A");
-		Lesson lesson4 = new Lesson("SR", new Time(1, 30, 0), new Time(3, 30, 0), LessonType.LAB, Day.THURSDAY, "odd", "SPL");
+		Lesson lesson4 = new Lesson("SR", new Time(13, 30, 0), new Time(15, 30, 0), LessonType.LAB, Day.THURSDAY, "odd", "SPL");
 		try {
 			ind2.addLesson(lesson3);
 			ind2.addLesson(lesson4);
@@ -77,7 +76,7 @@ public class test {
 		
 		IndexNumber ind3 = new IndexNumber(2984, "SEP1", 2);
 		Lesson lesson5 = new Lesson("LYR", new Time(10, 0, 0), new Time(12, 0, 0), LessonType.LEC, Day.MONDAY, "all", "LT1A");
-		Lesson lesson6 = new Lesson("TH", new Time(12, 30, 0), new Time(2, 30, 0), LessonType.LAB, Day.THURSDAY, "even", "SPL");
+		Lesson lesson6 = new Lesson("TH", new Time(12, 30, 0), new Time(14, 30, 0), LessonType.LAB, Day.THURSDAY, "even", "SPL");
 		try {
 			ind3.addLesson(lesson5);
 			ind3.addLesson(lesson6);
@@ -86,7 +85,7 @@ public class test {
 		
 		IndexNumber ind4 = new IndexNumber(3652, "SE1", 3);
 		Lesson lesson7 = new Lesson("LYR", new Time(10, 0, 0), new Time(12, 0, 0), LessonType.LEC, Day.MONDAY, "all", "LT1A");
-		Lesson lesson8 = new Lesson("SR", new Time(12, 30, 0), new Time(2, 30, 0), LessonType.LAB, Day.THURSDAY, "odd", "SPL");
+		Lesson lesson8 = new Lesson("SR", new Time(12, 30, 0), new Time(14, 30, 0), LessonType.LAB, Day.THURSDAY, "odd", "SPL");
 		try {
 			ind4.addLesson(lesson7);
 			ind4.addLesson(lesson8);

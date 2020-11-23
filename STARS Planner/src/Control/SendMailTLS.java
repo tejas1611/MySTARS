@@ -13,8 +13,19 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Controller class to manage sending of Email using javax.mail API
+ */
 public class SendMailTLS {
 	
+	/**
+	 * Function to send an email notification to the student
+	 * @param recepient to store the email id of the student
+	 * @param student Student object, representing the student to whom the notification is to be sent
+	 * @param course Course object, representing the course that is added, dropped or registered (out of waitlist)
+	 * @param flag to represent if the course was added, dropped or registered (just out of waitlist)
+	 * @throws Exception Runtime Exception
+	 */
 	public static void sendMail(String recepient, Student student, Course course, int flag) throws Exception {
 
 		final String username = "stars.planner.01@gmail.com";  //do-not-reply@blackboard.com ";  
@@ -65,18 +76,39 @@ public class SendMailTLS {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/**
+	 * Function to print the course that was registered (just out of waitlist) and all the registered courses for the student
+	 * @param student Student object, representing the student to whom the notification is to be sent
+	 * @param course Course object, representing the course that is registered (out of waitlist)
+	 * @return
+	 */
 	public static String printWaitlist(Student student, Course course){
 		String dummy="";
 		dummy+= ("You have been added to the following course:\nCourse Name:  "+course.getCourseName());
 		dummy+= "\n\nCourses Registered:\n" + StudentCourseControl.printCourseRegistered(student);
 		return dummy;
 	}
+	
+	/**
+	 * Function to print the course that was added and all the registered courses for the student
+	 * @param student Student object, representing the student to whom the notification is to be sent
+	 * @param course Course object, representing the course that is added
+	 * @return
+	 */
 	public static String printAddCourse(Student student, Course course){
 		String dummy="";
 		dummy+= ("You have added the following course:\nCourse Name:  "+course.getCourseName());
 		dummy+= "\n\nCourses Registered:\n" + StudentCourseControl.printCourseRegistered(student);
 		return dummy;
 	}
+	
+	/**
+	 * Function to print the course that was dropped and all the registered courses for the student
+	 * @param student Student object, representing the student to whom the notification is to be sent
+	 * @param course Course object, representing the course that is dropped
+	 * @return
+	 */
 	public static String printDropCourse(Student student, Course course){
 		String dummy="";
 		dummy+= ("You have dropped the following course:\nCourse Name:  "+course.getCourseName());

@@ -5,11 +5,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.List;
 import Control.*;
 import Entity.*;
-
+/**
+ * Boudary class- User Interface for Login
+ */
+@SuppressWarnings({"unchecked", "resource", "rawtypes"})
 public class LoginMenu {
 	static String userNAME="";
 	
-    @SuppressWarnings("unchecked") 
+    /**
+     * Function to access user login menu
+     * @param domain domain the user is accessing to
+     * @return 1 if user and password matches, 0 if not match
+     */ 
 	public static int userLogin(int domain) { 
         Scanner sc = new Scanner(System.in);
         List list = null;
@@ -64,6 +71,10 @@ public class LoginMenu {
        	return 0;
     }
     
+    /**
+     * Function to enter password not in string format
+     * @return password in string format
+     */
     public static String enterPassword(){
 		java.io.Console c = System.console();
 		if(c!=null) {
@@ -78,7 +89,10 @@ public class LoginMenu {
 		}
 	}
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Function to get Student objects from database
+     * @return list of Student objects
+     */
 	public static Student getStudentObject() {
         List<Student> studentList = (DatabaseControl.readSerializedObject("studentDB"));
         Student st=null;
@@ -90,7 +104,10 @@ public class LoginMenu {
         return st;
     }
     
-    @SuppressWarnings("unchecked")
+    /**
+     * Function to get Admin objects from database
+     * @return list of Admin objects
+     */
 	public static Admin getAdminObject(){
         List<Admin> adminList = (DatabaseControl.readSerializedObject("adminDB"));
         Admin ad=null;
