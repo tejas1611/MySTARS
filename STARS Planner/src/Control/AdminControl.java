@@ -76,7 +76,7 @@ public class AdminControl {
     	}
     	System.out.print("Total: " + studentDB.size());
     	
-    	System.out.print("\n\nPress enter to continue....");
+    	System.out.print("\nPress enter to continue....");
     	new Scanner(System.in).nextLine();
     }
     
@@ -103,6 +103,7 @@ public class AdminControl {
 		}
 		
     	// Write to file and print all courses
+		System.out.println("\nCourses currently in database:");
 		courseDB.add(newCourse);
     	DatabaseControl.writeSerializedObject("courseDB", courseDB);
     	for(Course c : courseDB) {
@@ -110,7 +111,7 @@ public class AdminControl {
     	}
     	System.out.print("Total: " + courseDB.size());
     	
-    	System.out.print("\n\nPress enter to continue....");
+    	System.out.print("\nPress enter to continue....");
     	new Scanner(System.in).nextLine();
     }
        
@@ -426,6 +427,34 @@ public class AdminControl {
     	}
     	
     	if(flag==false) System.out.println("Matric number not found.");
+    }
+    
+    /**
+     * Function to check if course already exists in database
+     * @param courseCode Course to check in database
+     * @return true if it exists, false otherwise
+     */
+    public static boolean checkCourseExists(String courseCode) {
+    	List<Course> courseDB = (List<Course>) DatabaseControl.readSerializedObject("courseDB");
+    	for(Course c : courseDB) {
+    		if(c.getCourseCode().equals(courseCode))
+    			return true;
+    	}
+    	return false;
+    }
+    
+	/**
+	 * Function to check if student already exists in databsse
+	 * @param ID Student ID to check in database
+	 * @return true if it exists, false otherwise
+	 */
+	public static boolean checkStudentExists(String ID) {
+		List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
+		for(Student s : studentDB) {
+    		if(s.getId().equals(ID))
+    			return true;
+    	}
+    	return false;
     }
 
 }

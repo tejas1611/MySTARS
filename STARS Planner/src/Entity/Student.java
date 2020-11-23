@@ -63,8 +63,10 @@ public class Student extends Person {
 	public void addCourse(Course course, IndexNumber index) { courses.put(course, index); }
 	public void removeCourse(Course course)  { 
 		for(Course c : courses.keySet())
-			if(c.getCourseCode().equals(course.getCourseCode()))
+			if(c.getCourseCode().equals(course.getCourseCode())) {
 				courses.remove(c); 
+				break;
+			}
 	}
 	
 	/**
@@ -109,7 +111,25 @@ public class Student extends Person {
 	
 	public int getAULimit() { return AULimit; }
 
+	/**
+	 * Function to get number of courses on waitlist for student
+	 * @return Length of waitlist
+	 */
 	public int getNumberWaitlist() { return this.waitlist.size(); }
+	
+	/**
+	 * Function to check if course already present in waitlist
+	 * @param course Course to check
+	 * @return true if already present, false if not present.
+	 */
+	public boolean waitListContains(Course course) {
+		for(Course c : waitlist.keySet()) {
+			if(c.getCourseCode().equals(course.getCourseCode())) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public HashMap<Course, IndexNumber> getCourses() { return courses; }
 	

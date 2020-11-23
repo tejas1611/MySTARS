@@ -2,6 +2,7 @@ package Boundary;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 import Control.CourseControl;
 import Control.PasswordControl;
@@ -22,7 +23,7 @@ public class AdminiMenu {
 	 */
 	public static void AdmMenu(Admin admin) {
 			int adminChoice=0;
-			Scanner sc = new Scanner(System.in);
+			
 			while(adminChoice != 9) {
 				StarsPlanner.clearScreen();
 				System.out.println("\n\n\n***** ADMIN PANEL *****");
@@ -37,8 +38,15 @@ public class AdminiMenu {
 			    System.out.println("(9): Exit");   
 			    System.out.print("Select an action: ");
 			    
-			    adminChoice = sc.nextInt();
-			    sc.nextLine(); // Consume newline character
+			    @SuppressWarnings("resource")
+				Scanner sc = new Scanner(System.in);
+			    try {
+			    	adminChoice = sc.nextInt();
+			    	sc.nextLine(); // Consume newline character
+			    } catch(InputMismatchException e) {
+			    	System.out.println("Invalid Entry. Please try again.");
+		        	continue;
+			    }
 		        switch(adminChoice) {
 		        	case 1: 
 		        	   System.out.println();
@@ -81,6 +89,10 @@ public class AdminiMenu {
 		        		System.out.println();
 		                System.out.print("Enter ID ");
 		                String id = sc.nextLine();
+		                if(AdminControl.checkStudentExists(id)) {
+		                	System.out.println("Student ID already exists.");
+		                	break;
+		                }
 		                System.out.print("Enter Student Name ");
 		                String name = sc.nextLine();
 		                System.out.print("Enter Email ");
@@ -107,10 +119,14 @@ public class AdminiMenu {
 
 		        	case 3: 
 		        		System.out.println();
+		        		System.out.print("Enter course code ");
+		        		String courseCode = sc.nextLine();
+		        		if(AdminControl.checkCourseExists(courseCode)) {
+		        			System.out.println("Course already exists.");
+		        			break;
+		        		}
 		                System.out.print("Enter course name ");
 		                String courseName = sc.nextLine();
-		                System.out.print("Enter course code ");
-		                String courseCode = sc.nextLine();
 		                System.out.print("Enter school ");
 		                String school2 = sc.nextLine();
 		                System.out.print("Enter type of course ");
@@ -138,14 +154,20 @@ public class AdminiMenu {
 		                System.out.println("(4): Update School of Course");
 		                System.out.println("(5): Back to Main Menu");
 		                System.out.print("Select an action: ");
-		                int updates = sc.nextInt();
-		                sc.nextLine(); // Consume newline character
+		                int updates;
+		                try{ 
+		                	updates = sc.nextInt();
+		                	sc.nextLine(); // Consume newline character
+		                } catch (InputMismatchException e) {
+		                	System.out.println("Invalid Entry.");
+		    	        	break;
+						}
 		                
 		                switch(updates) {
 		                	case 1: 
 		                		System.out.println();
 				                System.out.print("Following index groups were found: "); course.printIndexes();
-				                System.out.print("\nEnter your required index number ");
+				                System.out.print("\nEnter your required index number: ");
 				                int indexNumber = sc.nextInt();
 				                sc.nextLine(); // Consume newline character
 				                System.out.println("Current Vacancy in Index: " + CourseControl.getVacancy(course, indexNumber));
@@ -170,14 +192,14 @@ public class AdminiMenu {
 
 		                	case 3:
 		                		System.out.println();
-		                        System.out.print("Enter new course code");
+		                        System.out.print("Enter new course code: ");
 		                        String newCourseCode= sc.nextLine();
 		                        AdminControl.updateCourseCode(course, newCourseCode);
 		                        break;
 
 		                	case 4: 
 		                		System.out.println();
-		                		System.out.print("Enter School of Course");
+		                		System.out.print("Enter School of Course: ");
 		                		String newSchool = sc.nextLine();
 		                		AdminControl.updateSchool(course, newSchool);
 		                		break;
@@ -199,7 +221,7 @@ public class AdminiMenu {
 		                for (IndexNumber num : indexNum) { 		      
 		                    System.out.print(num.getIndexNum() + " "); 		
 		                }
-		                System.out.print("\nEnter your required index number ");
+		                System.out.print("\nEnter your required index number: ");
 		                int indexNumber = sc.nextInt();
 		                System.out.println("Current Vacancy in Index: " + CourseControl.getVacancy(courseVacancy, indexNumber));
 		                break;
@@ -218,7 +240,7 @@ public class AdminiMenu {
 		                for (IndexNumber num : indexNum2) { 		      
 		                    System.out.print(num.getIndexNum() + " "); 		
 		                }
-		                System.out.print("\nEnter your required index number ");
+		                System.out.print("\nEnter your required index number: ");
 		                int indexNumber2 = sc.nextInt();
 		        	    AdminControl.printStudentListByIndexNumber(courseCode4, indexNumber2);
 		                break;
@@ -243,10 +265,13 @@ public class AdminiMenu {
                         AdminControl.grantPermissionForOverloading(matric);
 						break; 
 
-					default:
+					case 9:
 						StarsPlanner.main(null);
+						break;
+						
+					default:
+						System.out.println("Invalid Entry.");
 		        } 
 			}
-		sc.close();
+		}
 	}
-}

@@ -78,7 +78,10 @@ public class IndexNumber implements Serializable {
 		students.add(Integer.valueOf(student.getMatricNo()));
 		vacancy--;
 	}
-	public void removeStudent(Student student) throws Exception { students.remove(Integer.valueOf(student.getMatricNo())); }
+	public void removeStudent(Student student) throws Exception { 
+		students.remove(Integer.valueOf(student.getMatricNo())); 
+		vacancy++;
+	}
 	
 	public ArrayList<Integer> getStudents() { return students; }
 

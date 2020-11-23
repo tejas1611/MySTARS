@@ -1,5 +1,6 @@
 package Boundary;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import Entity.*;;
 /**
@@ -24,8 +25,13 @@ public class StarsPlanner {
 	        System.out.println("2. ADMIN");
 	        System.out.println("0. EXIT");
 	        System.out.print("ENTER YOUR CHOICE: ");
-	        domain = sc.nextInt();
-	        sc.nextLine(); // Consume newline character
+	        try {
+	        	domain = sc.nextInt();
+	        	sc.nextLine(); // Consume newline character
+	        } catch(InputMismatchException e) {
+	        	System.out.println("Invalid Entry. Please try again.");
+	        	StarsPlanner.main(null);
+	        }
         	if(domain==0) {
         		System.out.println("\n\nGoodbye!");
         		System.exit(0);
@@ -55,13 +61,13 @@ public class StarsPlanner {
     public static void clearScreen() {  
     	java.io.Console c = System.console();
 		if(c==null) return;
-    	try {
-    		if (System.getProperty("os.name").contains("Windows"))
-    			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-    		else
-    			Runtime.getRuntime().exec("clear");
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	} 
+//    	try {
+//    		if (System.getProperty("os.name").contains("Windows"))
+//    			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+//    		else
+//    			Runtime.getRuntime().exec("clear");
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	} 
     } 
 }

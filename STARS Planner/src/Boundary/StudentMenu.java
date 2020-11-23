@@ -3,6 +3,8 @@ package Boundary;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Calendar;
+import java.util.InputMismatchException;
+
 import Control.CourseControl;
 import Control.StudentCourseControl;
 import Control.PasswordControl;
@@ -45,8 +47,13 @@ public class StudentMenu {
 			System.out.print("Select an action: ");
 			@SuppressWarnings("resource")
 			Scanner sc = new Scanner(System.in);
-			studentChoice = sc.nextInt();
-			sc.nextLine(); // Consume newline character
+			try {
+				studentChoice = sc.nextInt();
+				sc.nextLine(); // Consume newline character
+			} catch(InputMismatchException e) {
+				System.out.println("Invalid Entry. Please try again.");
+	        	continue;
+			}
 			
 			switch(studentChoice) {
 		     	case 1:
@@ -70,7 +77,7 @@ public class StudentMenu {
 	                sc.nextLine(); // Consume newline character
 	                
 	                try {
-	                	StudentCourseControl.addCourse(student, course, index);
+	                	StudentCourseControl.addCourse(student, course, index,0);
 	                } catch (Exception e) {
 	                	System.out.print("Error encountered in Add course");
 					}
@@ -105,7 +112,7 @@ public class StudentMenu {
 	                
 	            case 4: 
 	            	int indexnumber=0;
-	                System.out.println("Enter Course Code: ");
+	                System.out.print("\nEnter Course Code: ");
 	                String courseCode3 = sc.nextLine();
 	                Course course3=CourseControl.findCourse(courseCode3);
 	                if(course3==null) {
@@ -138,7 +145,7 @@ public class StudentMenu {
 	            	}
 	                
 	                System.out.print("Following index groups were found: "); course4.printIndexes();
-	                System.out.print("Enter new index number to swap: ");
+	                System.out.print("\nEnter new index number to swap: ");
 	                int index2 = sc.nextInt();
 	                sc.nextLine(); // Consume newline character
 	                
@@ -151,12 +158,14 @@ public class StudentMenu {
                 	String username="";
                 	String pass="";
                 	int tries=3;
-                	System.out.print("Enter user name of peer: ");
+                	System.out.print("\nEnter user name of peer: ");
                 	Student peer = null;
                 	username = sc.nextLine();
+                	boolean found = false;
                 	for(int i = 0 ; i < list.size() ; i++) {
                 		if(username.equals(((Student)list.get(i)).getId())) {
-                			tries=3;
+                			found = true;
+                			tries = 3;
                 			while(tries>0) {
                 				System.out.print("Enter password of peer: ");
                 				pass=LoginMenu.enterPassword();
@@ -164,6 +173,7 @@ public class StudentMenu {
 	                            	//password correct
                                     peer = (Student) list.get(i);
 	                            	System.out.println("Login Successful!");
+	                            	break;
                 				}
                 				else {
 	                            	System.out.println("Incorrect Password. Kindly re-enter!");
@@ -174,24 +184,38 @@ public class StudentMenu {
 	                            	}
                 				}
                 			}
-                		}	        		
-                		else {
-                			System.out.println("Username not found in records! Login again.");
                 		}
-	                    System.out.println("Enter Course Code:");
-	                    String courseCode5=sc.nextLine();
-	                    System.out.println("Enter your Index Number:");
-	                    int studentIndex = sc.nextInt();
-	                    sc.nextLine(); // Consume newline character
-	                    System.out.println("Enter peer's Index Number");
-	                    int peerIndex = sc.nextInt();
-	                    sc.nextLine(); // Consume newline character
-	                    StudentCourseControl.swapIndexNumberWithPeers(student,peer,courseCode5,studentIndex,peerIndex);
-					}                  
+                	}
+            		if(!found) {
+            			System.out.println("Username not found in records! Login again.");
+            			break;
+            		}
+            		
+                    System.out.print("Enter Course Code: ");
+                    String courseCode5=sc.nextLine();
+                    Course course5 = CourseControl.findCourse(courseCode5);
+	                if(course5==null) {
+	                	System.out.println("Course code not found");
+	                	break;
+	                }
+	                IndexNumber studentIndex =  student.findIndex(course5);
+                    System.out.print("Your index number is: " + studentIndex.getIndexNum()); 
+                    IndexNumber peerIndex = peer.findIndex(course5);
+                    System.out.println("\nPeer's index number is: " + peerIndex.getIndexNum());
+                    
+                    System.out.print("\nPress Y to confirm swap ");
+        			Scanner scanner = new Scanner(System.in);
+        			if(!scanner.nextLine().toLowerCase().equals("y"))
+        				break;
+        			else StudentCourseControl.swapIndexNumberWithPeers(student,peer,course5,studentIndex,peerIndex);          
                 	break;
                 	
-                  default: 
-                        break;
+	            case 7:
+	            	break;
+	            	
+	            default: 
+                	  System.out.println("\nInvalid entry.");
+                	  break;
 			}
 		}
 	}
