@@ -76,8 +76,8 @@ public class AdminControl {
     	}
     	System.out.print("Total: " + studentDB.size());
     	
-    	System.out.print("\nPress enter to continue....");
-    	new Scanner(System.in).nextLine();
+    	//System.out.print("\nPress enter to continue....");
+    	//new Scanner(System.in).nextLine();
     }
     
     /**
@@ -111,8 +111,8 @@ public class AdminControl {
     	}
     	System.out.print("Total: " + courseDB.size());
     	
-    	System.out.print("\nPress enter to continue....");
-    	new Scanner(System.in).nextLine();
+//    	System.out.print("\nPress enter to continue....");
+//    	new Scanner(System.in).nextLine();
     }
        
     /**
@@ -434,7 +434,8 @@ public class AdminControl {
      * @param courseCode Course to check in database
      * @return true if it exists, false otherwise
      */
-    public static boolean checkCourseExists(String courseCode) {
+    @SuppressWarnings("unchecked")
+	public static boolean checkCourseExists(String courseCode) {
     	List<Course> courseDB = (List<Course>) DatabaseControl.readSerializedObject("courseDB");
     	for(Course c : courseDB) {
     		if(c.getCourseCode().equals(courseCode))
@@ -448,6 +449,7 @@ public class AdminControl {
 	 * @param ID Student ID to check in database
 	 * @return true if it exists, false otherwise
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean checkStudentExists(String ID) {
 		List<Student> studentDB = (List<Student>) DatabaseControl.readSerializedObject("studentDB");
 		for(Student s : studentDB) {

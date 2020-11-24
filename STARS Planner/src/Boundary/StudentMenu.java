@@ -100,14 +100,14 @@ public class StudentMenu {
 	            	
 	                try {
 						StudentCourseControl.dropCourse(student, course2);
+						System.out.print("Successfully dropped course: " + course2.printName());
 					} catch (Exception e) {
-						System.out.print("Error Encountered in Drop course");
+						System.out.print("Error Encountered in Drop course " + e);
 					}
-	                System.out.print("Successfully dropped course: " + course2.printName());
                 break;
 	                
 	            case 3: 
-	            	StudentCourseControl.printCourseRegistered(student);
+	            	System.out.println("\nCourses Registered:\n" + StudentCourseControl.printCourseRegistered(student));
 	                break;
 	                
 	            case 4: 
@@ -125,7 +125,9 @@ public class StudentMenu {
 	                
 	                indexnumber=sc.nextInt(); 
 	                sc.nextLine(); // Consume newline character
-	                System.out.println("Vacancies in this course: " + CourseControl.getVacancy(course3, indexnumber));          
+	                int vac = CourseControl.getVacancy(course3, indexnumber);
+	                if(vac>=0) System.out.println("Vacancies in this course: " + vac);          
+	                else System.out.println("Invalid Entry"); 
 	                break;
 	                
 	            case 5:

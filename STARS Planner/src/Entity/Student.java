@@ -7,6 +7,10 @@ import java.util.HashMap;
 /**
  * Entity class to describe all the student parameters, getters and setters.
  */
+/**
+ * @author tejas
+ *
+ */
 public class Student extends Person {
 
 	private static final long serialVersionUID = 1L;
@@ -23,13 +27,13 @@ public class Student extends Person {
 	
 	private void setDefaultAULimit() {
 		if(school.equals("SCSE"))
-			AULimit = 22;
+			AULimit = 13;
 		else if(school.equals("NBS"))
-			AULimit = 19;
+			AULimit = 10;
 		else if(school.equals("SPMS"))
-			AULimit = 21;
+			AULimit = 12;
 		else
-			AULimit = 22;
+			AULimit = 13;
 	}
 	
 	/**
@@ -57,18 +61,6 @@ public class Student extends Person {
 		setDefaultAULimit();
 	}
 	
-	public String getNationality() { return nationality; }
-	public String getGender() { return gender; }
-	
-	public void addCourse(Course course, IndexNumber index) { courses.put(course, index); }
-	public void removeCourse(Course course)  { 
-		for(Course c : courses.keySet())
-			if(c.getCourseCode().equals(course.getCourseCode())) {
-				courses.remove(c); 
-				break;
-			}
-	}
-	
 	/**
 	 * Function to find the index for a course
 	 * @param course Course object for which the index number is to be found
@@ -81,7 +73,36 @@ public class Student extends Person {
 		return null;
 	}
 	
+	
+	/**
+	 * Function to add course in courses hashmap
+	 * @param course Course to be added
+	 * @param index Index group to be added
+	 */
+	public void addCourse(Course course, IndexNumber index) { courses.put(course, index); }
+	/**
+	 * Course to be removed from hashmap
+	 * @param course Course to be removed
+	 */
+	public void removeCourse(Course course)  { 
+		for(Course c : courses.keySet())
+			if(c.getCourseCode().equals(course.getCourseCode())) {
+				courses.remove(c); 
+				break;
+			}
+	}
+	
+	/**
+	 * Function to add a course in waitlist for a student
+	 * @param course Course to be added
+	 * @param index Index group to be added
+	 */
 	public void addWaitlist(Course course, IndexNumber index) { waitlist.put(course, index); }
+	/**
+	 * Function to remove course from waitlist and add to courses
+	 * @param course Course to be removed
+	 * @param index Index to be added in courses
+	 */
 	public void removeWaitlist(Course course, IndexNumber index) { 
 		for(Course c : waitlist.keySet())
 			if(c.getCourseCode().equals(course.getCourseCode())) {
@@ -109,7 +130,6 @@ public class Student extends Person {
 		return totalAU;
 	}
 	
-	public int getAULimit() { return AULimit; }
 
 	/**
 	 * Function to get number of courses on waitlist for student
@@ -130,9 +150,7 @@ public class Student extends Person {
 		}
 		return false;
 	}
-	
-	public HashMap<Course, IndexNumber> getCourses() { return courses; }
-	
+		
 	/**
 	 * Function to set the index number for a course
 	 * @param course Course object for which the index number is to be set
@@ -142,17 +160,7 @@ public class Student extends Person {
 		courses.get(course).setIndexNum(index);
 	}
 	
-	public int getMatricNo() { return matricNo; }
-	public void setMatricNo(int matricNo) { this.matricNo = matricNo; }
-
-	public int getYearOfStudy() { return yearOfStudy; }
-	public void setYearOfStudy(int yearOfStudy) { this.yearOfStudy = yearOfStudy; }
 	
-	public void setOverloadPermission(boolean overload) { this.overloadPermission = overload; }
-	public boolean isOverloadPermission() { return overloadPermission; }
-	
-	public static Calendar getAccessStart() { return accessStart; }
-	public static void setAccessStart(Calendar accessStart) { Student.accessStart = accessStart; }
 	/**
 	 * Function to print the start of the access period for student to register courses
 	 * @return the start of access time
@@ -166,8 +174,6 @@ public class Student extends Person {
 		return (day+"-"+month+"-"+year + " " + hour+":"+minute); 
 	}
 
-	public static Calendar getAccessEnd() {	return accessEnd; }
-	public static void setAccessEnd(Calendar accessEnd) { Student.accessEnd = accessEnd; }
 	/**
 	 * Function to print the end of the access period for student to register courses
 	 * @return the end of access time
@@ -181,6 +187,28 @@ public class Student extends Person {
 		return (day+"-"+month+"-"+year + " " + hour+":"+minute);  
 	}
 
+	/**
+	 * Getter and Setter functions
+	 */
+	public int getMatricNo() { return matricNo; }
+	public void setMatricNo(int matricNo) { this.matricNo = matricNo; }
+	
+	public int getYearOfStudy() { return yearOfStudy; }
+	public void setYearOfStudy(int yearOfStudy) { this.yearOfStudy = yearOfStudy; }
+	
+	public void setOverloadPermission(boolean overload) { this.overloadPermission = overload; }
+	public boolean isOverloadPermission() { return overloadPermission; }
+	
+	public static Calendar getAccessStart() { return accessStart; }
+	public static void setAccessStart(Calendar accessStart) { Student.accessStart = accessStart; }
+	
+	public static Calendar getAccessEnd() {	return accessEnd; }
+	public static void setAccessEnd(Calendar accessEnd) { Student.accessEnd = accessEnd; }
+	
+	public HashMap<Course, IndexNumber> getCourses() { return courses; }
+	
 	public String getSchool() { return school; }
+
+	public int getAULimit() { return AULimit; }
 	
 }

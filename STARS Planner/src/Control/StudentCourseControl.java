@@ -26,15 +26,12 @@ public class StudentCourseControl {
      * @throws Exception Overload exception, Email Exception
      */
     public static void addCourse(Student student, Course course, int index, int flag) throws Exception {
-    	PrintStream pStream;
-    	if(flag!=1) pStream = System.out;
-    	else pStream = null;
     	boolean valid = true;
     	
     	// Check AU limit for student
     	int totalAU = student.getTotalAU();
 		if(totalAU+course.getAu() > student.getAULimit() && !student.isOverloadPermission()) {
-			pStream.println("Student not allowed to overload.");
+			if(flag!=1) System.out.println("Student not allowed to overload.");
 			throw new Exception();
 		}
 		
@@ -44,7 +41,7 @@ public class StudentCourseControl {
 		
 		if(i==-1) {
 			valid=false;
-			pStream.println("Index Number not found in course");
+			if(flag!=1) System.out.println("Index Number not found in course");
 			return;
 		}
 		
@@ -63,28 +60,28 @@ public class StudentCourseControl {
 			IndexNumber i_temp = indices.get(i);
 			i_temp.addStudent(student);
 			indices.set(i, i_temp);
-			pStream.println("Course successfully registered");
+			if(flag!=1) System.out.println("Course successfully registered");
 			try {
-				pStream.print("\nSending Confirmation...");
+				if(flag!=1) System.out.print("\nSending Confirmation...");
 				SendMailTLS.sendMail(student.getEmail(), student, course, 0);
 			} catch (Exception e) {
-				pStream.print("Unable to send an E-mail. : " + e);
+				if(flag!=1) System.out.print("Unable to send an E-mail. : " + e);
 			}
 		}
 		else {
 			if(student.waitListContains(course)) {
-				pStream.println("Already on waitlist for course " + course.printName());
+				if(flag!=1) System.out.println("Already on waitlist for course " + course.printName());
 			}
 			else if(student.getNumberWaitlist() < 5) {
 				student.addWaitlist(course, indices.get(i));
 				IndexNumber i_temp = indices.get(i);
 				i_temp.putInWaitlist(student);
 				indices.set(i, i_temp);
-				System.out.println("No vacancy available. Added to waitlist.");
+				if(flag!=1) System.out.println("No vacancy available. Added to waitlist.");
 			}
 			else {
-				System.out.println("Unable to register course.");
-				System.out.println("No vacancy available. Course waitlist limit (5) reached.");
+				if(flag!=1) System.out.println("Unable to register course.");
+				if(flag!=1) System.out.println("No vacancy available. Course waitlist limit (5) reached.");
 			}
 		}
 		course.setIndexes(indices);
@@ -157,10 +154,11 @@ public class StudentCourseControl {
     	if(coursesString.equals(""))
     		System.out.println("\n\nNo courses have been registered.");
     	else {
-    		System.out.println("\n\nCourses Registered:\n" + coursesString);
-    		System.out.println("\nTotal AU: " + student.getTotalAU());
+    		return coursesString + "\nTotal AU: " + student.getTotalAU();
+//    		System.out.println("\n\nCourses Registered:\n" + coursesString);
+//    		System.out.println("\nTotal AU: " + student.getTotalAU());
     	}
-		return coursesString;
+    	return coursesString + "\nTotal AU: " + student.getTotalAU();
     }
     
 	/**

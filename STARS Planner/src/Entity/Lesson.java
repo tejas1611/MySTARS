@@ -40,20 +40,6 @@ public class Lesson implements Serializable {
 		this.teacher= teacher;
 	}
 
-	public String getVenue() { return venue; }
-	public void setVenue(String venue) { this.venue=venue; }
-
-	public String getWeek() { return week; }
-	public void getWeek(String week) {this.week=week;}
-
-	public LessonType getLessonType() { return lessonType; }
-	public void setLessonType(LessonType lessonType) { this.lessonType= lessonType; }
-
-	public Day getDay() { return day; }
-	public void setDay(Day day) { this.day= day; }
-
-	public Time getStartTime() { return startTime; }
-	public void setStartTime(Time startTime) { this.startTime= startTime; }
 	/**
 	 * Function to print the start time of the lesson
 	 * @return start time of lesson formatted as String
@@ -61,9 +47,7 @@ public class Lesson implements Serializable {
 	public String printStartTime() { 
 		return String.valueOf(startTime.getHours()) + ":" + String.valueOf(startTime.getMinutes()); 
 	}
-
-	public Time getEndTime() { return endTime; }
-	public void setEndTime(Time endTime) { this.endTime= endTime; }
+	
 	/**
 	 * Function to print the end time of the lesson
 	 * @return end time of lesson formatted as String
@@ -71,7 +55,28 @@ public class Lesson implements Serializable {
 	public String printEndTime() { 
 		return String.valueOf(endTime.getHours()) + ":" + String.valueOf(endTime.getMinutes()); 
 	}
-
+	
+	/**
+	 * Getter and Setter functions
+	 */
+	public String getVenue() { return venue; }
+	public void setVenue(String venue) { this.venue=venue; }
+	
+	public String getWeek() { return week; }
+	public void getWeek(String week) {this.week=week;}
+	
+	public LessonType getLessonType() { return lessonType; }
+	public void setLessonType(LessonType lessonType) { this.lessonType= lessonType; }
+	
+	public Day getDay() { return day; }
+	public void setDay(Day day) { this.day= day; }
+	
+	public Time getStartTime() { return startTime; }
+	public void setStartTime(Time startTime) { this.startTime= startTime; }
+	
+	public Time getEndTime() { return endTime; }
+	public void setEndTime(Time endTime) { this.endTime= endTime; }
+	
 	public String getTeacher() { return teacher; }
 	public void setTeacher(String teacher) { this.teacher= teacher; }
 

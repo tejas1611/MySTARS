@@ -47,8 +47,6 @@ public class IndexNumber implements Serializable {
 		this.lessons = another.lessons;
 	}
 	
-    public int getIndexNum() { return indexNum; }
-	public void setIndexNum(int indexNum) { this.indexNum=indexNum; }
 
 	/**
 	 * Function to print the time table- lesson type, venue, week and day
@@ -62,14 +60,7 @@ public class IndexNumber implements Serializable {
 			System.out.println(lessonType + " " + venue + " " + week + " " + day.toString() + " " + l.printStartTime() + "-" + l.printEndTime());
 		}
 	}
-
-	public String getTutorialGroup() {return tutorialGroup;}
-	public void setTutorialGroup(String tutorialGroup) {this.tutorialGroup= tutorialGroup;}
-
-	public int getVacancy() { return vacancy; }
-	public void setVacancy(int vacancy) { this.vacancy= vacancy; }
 	
-
 	/**
 	 * Function to add a student to an index number
 	 * @param student Student object to be added to the index number
@@ -78,12 +69,15 @@ public class IndexNumber implements Serializable {
 		students.add(Integer.valueOf(student.getMatricNo()));
 		vacancy--;
 	}
+	/**
+	 * Function to remove a student from an index number
+	 * @param student Student object to be removed from the index number
+	 */
 	public void removeStudent(Student student) throws Exception { 
 		students.remove(Integer.valueOf(student.getMatricNo())); 
 		vacancy++;
 	}
 	
-	public ArrayList<Integer> getStudents() { return students; }
 
 	/**
 	 * Function to add a lesson to an index number
@@ -97,6 +91,11 @@ public class IndexNumber implements Serializable {
 			lessons.add(lesson);
 		}
 	}
+	/**
+	 * Function to add a lesson to an index number
+	 * @param lesson object to be removed
+	 * @throws Exception if lesson does not exist in the index number
+	 */
 	public void removeLesson(Lesson lesson) throws Exception {
 		if(!lessons.contains(lesson))
 			throw new Exception("Lesson does not exist in this index number ");
@@ -104,13 +103,33 @@ public class IndexNumber implements Serializable {
 			lessons.remove(lesson);
 		}
 	}
-	public ArrayList<Lesson> getLessons() { return lessons; }
 	
-	public void putInWaitlist(Student student) {
-		waitlist.add(student.getMatricNo());
-	}
+	/**
+	 * To find the next student in waitlist queue
+	 * @return student object at head of queue
+	 * @throws Exception if waitlist is empty
+	 */
 	public Integer findNextInWaitlist() throws Exception {
 		return waitlist.remove();
+	}
+	
+	/**
+	 * Getter and Setter functions
+	 */
+	public ArrayList<Lesson> getLessons() { return lessons; }
+	
+	public int getIndexNum() { return indexNum; }
+	public void setIndexNum(int indexNum) { this.indexNum=indexNum; }
+	
+	public String getTutorialGroup() {return tutorialGroup;}
+	public void setTutorialGroup(String tutorialGroup) {this.tutorialGroup= tutorialGroup;}
+	
+	public int getVacancy() { return vacancy; }
+	public void setVacancy(int vacancy) { this.vacancy= vacancy; }
+	
+	public ArrayList<Integer> getStudents() { return students; }
+	public void putInWaitlist(Student student) {
+		waitlist.add(student.getMatricNo());
 	}
 
 	public int getWaitlistLength() { return waitlist.size(); }

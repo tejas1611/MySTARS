@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * @author tejas
  * Entity class to describe the variables, getters and setters for the course.
  */
 public class Course implements Serializable {
@@ -68,8 +67,6 @@ public class Course implements Serializable {
     	return studentID;
 	}
 	
-	public int getAu() { return au; }
-	public void setAu(int au) { this.au = au; }
 	
 	public void addIndex (IndexNumber ind) { indexes.add(ind); }
 	public ArrayList<IndexNumber> getIndexes() { return indexes; }
@@ -82,20 +79,6 @@ public class Course implements Serializable {
             System.out.print(num.getIndexNum() + " "); 		
         }
 	}
-	
-	public String getSchool() { return school; }
-	public void setSchool(String school) { this.school = school;}
-	
-	public String getCourseType() { return courseType; }
-	public void setCourseType(String courseType) { this.courseType = courseType; }
-	
-	public String getCourseCode() { return courseCode; }	public void setCourseCode(String courseCode) { this.courseCode=courseCode; }
-	
-	public String getCourseName() { return courseName; }
-	public void setCourseName(String courseName) { this.courseName=courseName; }
-	
-	public int getAU(){ return au; }
-	
 	/**
 	 * Function to print the information of the course- course code, name, type and AUs
 	 */
@@ -110,4 +93,22 @@ public class Course implements Serializable {
 		else
 			return false;
 	}
+	
+	/**
+	 * Getter and Setter functions
+	 */
+	public int getAu() { return au; }
+	public void setAu(int au) { this.au = au; }
+	
+	public String getSchool() { return school; }
+	public void setSchool(String school) { this.school = school;}
+	
+	public String getCourseType() { return courseType; }
+	public void setCourseType(String courseType) { this.courseType = courseType; }
+	
+	public String getCourseCode() { return courseCode; }	public void setCourseCode(String courseCode) { this.courseCode=courseCode; }
+	
+	public String getCourseName() { return courseName; }
+	public void setCourseName(String courseName) { this.courseName=courseName; }
+	
 }

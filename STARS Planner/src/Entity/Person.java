@@ -33,6 +33,16 @@ public abstract class Person implements Serializable {
 		this.nationality = nationality;
 	}
 
+	/**
+	 * Function to print the username, name and email id of the person
+	 */
+	public void printInfo() {
+		System.out.println( id + " - " + name + ", Email:" + email);
+	}
+	
+	/**
+	 * Getter and Setter functions
+	 */
 	public String getId() { return id; }
 	public void setId(String id) { this.id = id; }
 
@@ -43,11 +53,8 @@ public abstract class Person implements Serializable {
 
 	public String getEmail() { return email; }
 	public void setEmail(String email) { this.email = email; }
+	
+	public String getNationality() { return nationality; }
+	public String getGender() { return gender; }
 
-	/**
-	 * Function to print the username, name and email id of the person
-	 */
-	public void printInfo() {
-		System.out.println( id + " - " + name + ", Email:" + email);
-	}
 }

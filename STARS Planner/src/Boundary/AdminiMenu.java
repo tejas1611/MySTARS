@@ -105,8 +105,15 @@ public class AdminiMenu {
 		                System.out.print("Enter Nationality ");
 		                String nationality = sc.nextLine();
 		                System.out.print("Enter Matric Number ");
-		                int matricNo = sc.nextInt();
-		                sc.nextLine(); // Consume newline character
+		                int matricNo;
+		                while(true) {
+			                try {
+			                	matricNo = new Scanner(System.in).nextInt();
+			                	break;
+			                } catch(InputMismatchException e) {
+			                	System.out.println("Numeric field. Please retry.");
+			                }
+		                }
 		                System.out.print("Enter School ");
 		                String school = sc.nextLine();
 		                System.out.print("Enter Program ");
@@ -132,8 +139,15 @@ public class AdminiMenu {
 		                System.out.print("Enter type of course ");
 		                String courseType = sc.nextLine();
 		                System.out.print("Enter course AU ");
-		                int au = sc.nextInt();
-		                sc.nextLine(); // Consume newline character
+		                int au;
+		                while(true) {
+			                try {
+			                	au = new Scanner(System.in).nextInt();
+			                	break;
+			                } catch(InputMismatchException e) {
+			                	System.out.println("Numeric field. Please retry.");
+			                }
+		                }
 		                AdminControl.addCourse(courseCode, courseName, school2, courseType, au);
 		                break;
            

@@ -76,7 +76,7 @@ public class test {
 		
 		Course course = new Course("CE2002", "Object Oriented Design & Programming", "SCSE", "Core", 3);
 		
-		IndexNumber ind = new IndexNumber(1234, "SEP1", 2);
+		IndexNumber ind = new IndexNumber(1234, "SEP1", 4);
 		Lesson lesson = new Lesson("TKL", new Time(9, 30, 0), new Time(10, 30, 0), LessonType.LEC, Day.MONDAY, "all", "LT1A");
 		Lesson lesson2 = new Lesson("TH", new Time(14, 30, 0), new Time(15, 30, 0), LessonType.LAB, Day.MONDAY, "even", "SPL");
 		try {
@@ -84,7 +84,7 @@ public class test {
 			ind.addLesson(lesson2);
 		} catch (Exception e) {		}
 				
-		IndexNumber ind2 = new IndexNumber(5678, "SE2", 3);
+		IndexNumber ind2 = new IndexNumber(5678, "SE2", 5);
 		Lesson lesson3 = new Lesson("TKL", new Time(9, 30, 0), new Time(10, 30, 0), LessonType.LEC, Day.MONDAY, "all", "LT1A");
 		Lesson lesson4 = new Lesson("SR", new Time(12, 30, 0), new Time(13, 30, 0), LessonType.LAB, Day.FRIDAY, "odd", "SPL");
 		try {
@@ -97,7 +97,7 @@ public class test {
 		
 		Course course2 = new Course("CE2001", "Algorithms", "SCSE", "Core", 3);
 		
-		IndexNumber ind3 = new IndexNumber(1357, "SEP1", 2);
+		IndexNumber ind3 = new IndexNumber(1357, "SEP1", 5);
 		Lesson lesson5 = new Lesson("LYR", new Time(10, 30, 0), new Time(11, 30, 0), LessonType.LEC, Day.FRIDAY, "all", "LT1A");
 		Lesson lesson6 = new Lesson("KH", new Time(10, 30, 0), new Time(11, 30, 0), LessonType.LAB, Day.TUESDAY, "even", "SPL");
 		try {
@@ -105,7 +105,7 @@ public class test {
 			ind3.addLesson(lesson6);
 		} catch (Exception e) {		}
 				
-		IndexNumber ind4 = new IndexNumber(2468, "SE1", 1);
+		IndexNumber ind4 = new IndexNumber(2468, "SE1", 5);
 		Lesson lesson7 = new Lesson("LYR", new Time(10, 30, 0), new Time(11, 30, 0), LessonType.LEC, Day.FRIDAY, "all", "LT1A");
 		Lesson lesson8 = new Lesson("DW", new Time(16, 30, 0), new Time(17, 30, 0), LessonType.LAB, Day.MONDAY, "odd", "TR32");
 		try {
@@ -118,7 +118,7 @@ public class test {
 		
 		Course course3 = new Course("CE2004", "Circuits & Signals", "SCSE", "GER-Core", 3);
 		
-		IndexNumber ind5 = new IndexNumber(1470, "SEP1", 3);
+		IndexNumber ind5 = new IndexNumber(1470, "SEP1", 6);
 		Lesson lesson9 = new Lesson("LYR", new Time(12, 30, 0), new Time(14, 30, 0), LessonType.LEC, Day.TUESDAY, "all", "LT1A");
 		Lesson lesson10 = new Lesson("TH", new Time(14, 30, 0), new Time(16, 30, 0), LessonType.LAB, Day.THURSDAY, "even", "SPL");
 		try {
@@ -126,7 +126,7 @@ public class test {
 			ind5.addLesson(lesson10);
 		} catch (Exception e) {		}
 				
-		IndexNumber ind6 = new IndexNumber(2581, "SE1", 3);
+		IndexNumber ind6 = new IndexNumber(2581, "SE1", 5);
 		Lesson lesson11 = new Lesson("LYR", new Time(12, 30, 0), new Time(14, 30, 0), LessonType.LEC, Day.TUESDAY, "all", "LT1A");
 		Lesson lesson12 = new Lesson("SR", new Time(14, 30, 0), new Time(14, 30, 0), LessonType.LAB, Day.TUESDAY, "odd", "SPL");
 		try {
@@ -139,13 +139,13 @@ public class test {
 		
 		Course course4 = new Course("BU8401", "Management", "NBS", "UE", 3);
 		
-		IndexNumber ind7 = new IndexNumber(1593, "SEP1", 1);
+		IndexNumber ind7 = new IndexNumber(1593, "SEP1", 3);
 		Lesson lesson13 = new Lesson("WQ", new Time(14, 30, 0), new Time(17, 30, 0), LessonType.SEM, Day.WEDNESDAY, "all", "SR7");
 		try {
 			ind7.addLesson(lesson13);
 		} catch (Exception e) {		}
 				
-		IndexNumber ind8 = new IndexNumber(2604, "SE1", 4);
+		IndexNumber ind8 = new IndexNumber(2604, "SE1", 6);
 		Lesson lesson15 = new Lesson("AS", new Time(14, 30, 0), new Time(17, 30, 0), LessonType.SEM, Day.MONDAY, "all", "SR8");
 		try {
 			ind8.addLesson(lesson15);
@@ -156,7 +156,7 @@ public class test {
 		
 		Course course5 = new Course("HY0001", "Ethics & Moral Reasoning", "SoH", "GER-Core", 1);
 		
-		IndexNumber ind9 = new IndexNumber(1593, "SEP1", 5);
+		IndexNumber ind9 = new IndexNumber(1593, "SEP1", 10);
 		Lesson lesson17 = new Lesson("LYR", new Time(22, 0, 0), new Time(23, 0, 0), LessonType.ONL, Day.SATURDAY, "all", "LT1A");
 		try {
 			ind9.addLesson(lesson17);;
@@ -166,7 +166,7 @@ public class test {
 		
 		Course course6 = new Course("MH8211", "Calculus", "SPMS", "UE", 4);
 		
-		IndexNumber ind10 = new IndexNumber(1616, "SEP1", 3);
+		IndexNumber ind10 = new IndexNumber(1616, "SEP1", 5);
 		Lesson lesson18 = new Lesson("WQ", new Time(11, 30, 0), new Time(13, 30, 0), LessonType.TUT, Day.WEDNESDAY, "all", "SR7");
 		Lesson lesson20 = new Lesson("AD", new Time(13, 30, 0), new Time(15, 00, 0), LessonType.LAB, Day.THURSDAY, "odd", "HPL");
 		try {
@@ -174,7 +174,7 @@ public class test {
 			ind10.addLesson(lesson20);
 		} catch (Exception e) {		}
 				
-		IndexNumber ind11 = new IndexNumber(2727, "SE1", 2);
+		IndexNumber ind11 = new IndexNumber(2727, "SE1", 5);
 		Lesson lesson19 = new Lesson("AS", new Time(10, 00, 0), new Time(12, 00, 0), LessonType.TUT, Day.MONDAY, "all", "SR8");
 		Lesson lesson21 = new Lesson("PQ", new Time(11, 00, 0), new Time(13, 00, 0), LessonType.LAB, Day.FRIDAY, "even", "HPL");
 		try {
